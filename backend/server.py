@@ -1,8 +1,10 @@
 from flask import Flask, send_from_directory
+from flask_cors import CORS
 import os
 #http://127.0.0.1:5000/
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def index():
