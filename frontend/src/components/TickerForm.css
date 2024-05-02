@@ -1,0 +1,42 @@
+/* TickerForm.css */
+
+/* Style for the container div */
+.ticker-form {
+    width: 300px; /* Adjust the width as needed */
+    margin: 20px auto; /* Center the form horizontally */
+  }
+  
+  /* Style for the input field */
+  .react-autosuggest__input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Style for the suggestions container */
+  .react-autosuggest__suggestions-container {
+    display: none; /* Initially hide the suggestions */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 4px;
+    z-index: 999; /* Ensure suggestions appear above other elements */
+  }
+  
+  /* Style for individual suggestion items */
+  .react-autosuggest__suggestion {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  /* Style for the highlighted suggestion item */
+  .react-autosuggest__suggestion--highlighted {
+    background-color: #f0f0f0;
+  }
+  
