@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
 import './TickerForm.css'; 
 import './theme.css';
@@ -6,6 +6,22 @@ import './theme.css';
 const TickerForm = () => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [portfolioTickers, setPortfolioTickers] = useState([]);
+
+  useEffect(() => {
+    // Fetch the current portfolio tickers when the component mounts
+    fetchPortfolioTickers();
+  }, []);
+
+  const fetchPortfolioTickers = async () => {
+    try {
+      const response = await fetch('/portfolio-tickers');
+      const data = await response.json();
+      setPortfolioTickers(data.tickers);
+    } catch (error) {
+      console.error('Error fetching portfolio tickers:', error);
+    }
+  };
 
   const fetchSuggestions = async (value) => {
     try {
@@ -57,6 +73,33 @@ const TickerForm = () => {
     );
   };
 
+  const onSuggestionSelected = async (event, { suggestion }) => {
+    // Trigger fetch request to add selected ticker to portfolio
+    await addTickerToPortfolio(suggestion.symbol);
+  };
+
+  const addTickerToPortfolio = async (ticker) => {
+    try {
+      const response = await fetch('/add-tickers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ tickers: [ticker] })
+      });
+
+      if (response.ok) {
+        console.log('Ticker added to portfolio successfully');
+        // Trigger a request to fetch updated portfolio tickers
+        fetchPortfolioTickers();
+      } else {
+        console.error('Failed to add ticker to portfolio:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error adding ticker to portfolio:', error);
+    }
+  };
+
   // Define your theme object using the classes from your theme.css file
   const theme = {
     container: 'container',
@@ -68,6 +111,12 @@ const TickerForm = () => {
 
   return (
     <div className="ticker-form">
+      <h2>Current Portfolio:</h2>
+      <ul>
+        {portfolioTickers.map((ticker, index) => (
+          <li key={index}>{ticker}</li>
+        ))}
+      </ul>
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -75,7 +124,8 @@ const TickerForm = () => {
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
         inputProps={{ id: 'ticker-input', placeholder: 'Enter a ticker symbol', value, onChange }}
-        theme={theme} // Apply the theme object here
+        onSuggestionSelected={onSuggestionSelected}
+        theme={theme} 
       />
     </div>
   );
