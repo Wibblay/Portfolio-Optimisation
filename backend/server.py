@@ -1,10 +1,11 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify, request
+import requests
 from flask_cors import CORS
 import os
 #http://127.0.0.1:5000/
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 @app.route('/')
 def index():

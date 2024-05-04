@@ -1,19 +1,35 @@
-// src/components/TickerForm.js
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import './TickerForm.css'; 
+import * as finnhub from 'finnhub';
 
 const TickerForm = () => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
+  // Define your Finnhub API key here
+  const api_key = "coqlvopr01qmi0t8mb8gcoqlvopr01qmi0t8mb90";
+
   const fetchSuggestions = async (value) => {
-    const response = await fetch(`https://query1.finance.yahoo.com/v1/finance/search?q=${value}&quotesCount=5&newsCount=0`);
-    const data = await response.json();
-    return data.quotes.map(quote => ({
-      symbol: quote.symbol,
-      name: quote.longname
-    }));
+    // Create a new instance of the Finnhub client
+    const finnhubClient = new finnhub.DefaultApi();
+
+    try {
+      // Make a request to the Finnhub symbol search endpoint
+      const response = await finnhubClient.search(value, { token: api_key });
+      
+      // Extract suggestions from the response
+      const suggestions = response.result.map(item => ({
+        symbol: item.symbol,
+        name: item.description
+      }));
+
+      console.log('Suggestions:', suggestions);
+      return suggestions;
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      return [];
+    }
   };
 
   const onChange = (event, { newValue }) => {
@@ -59,4 +75,3 @@ const TickerForm = () => {
 };
 
 export default TickerForm;
-
