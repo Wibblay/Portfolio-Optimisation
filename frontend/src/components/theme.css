@@ -1,0 +1,44 @@
+/* theme.css */
+
+/* Styles for the container div */
+.container {
+    position: relative;
+    width: 100%;
+  }
+  
+  /* Styles for the input field */
+  .input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Styles for the suggestions container */
+  .suggestionsContainer {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px; /* Adjust the maximum height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 4px;
+    z-index: 999; /* Ensure suggestions appear above other elements */
+  }
+  
+  /* Styles for individual suggestion items */
+  .suggestion {
+    list-style-type: none;
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  
+  /* Styles for the highlighted suggestion item */
+  .suggestionHighlighted {
+    background-color: #f0f0f0;
+  }
+  

@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import './TickerForm.css'; 
-import * as finnhub from 'finnhub';
+import './theme.css';
 
 const TickerForm = () => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
-  // Define your Finnhub API key here
-  const api_key = "coqlvopr01qmi0t8mb8gcoqlvopr01qmi0t8mb90";
-
   const fetchSuggestions = async (value) => {
-    // Create a new instance of the Finnhub client
-    const finnhubClient = new finnhub.DefaultApi();
-
     try {
-      // Make a request to the Finnhub symbol search endpoint
-      const response = await finnhubClient.search(value, { token: api_key });
-      
-      // Extract suggestions from the response
-      const suggestions = response.result.map(item => ({
+      const response = await fetch(`http://127.0.0.1:5000/symbol-search?query=${value}`);
+      const data = await response.json();
+
+      if (!data.result) {
+        return []; // Return an empty array if no suggestions
+      }
+
+      // Filter out suggestions with type other than 'Common Stock'
+      const commonStockSuggestions = data.result.filter(item => item.type === 'Common Stock');
+
+      // Transform the response data into the expected format
+      const suggestions = commonStockSuggestions.map(item => ({
         symbol: item.symbol,
         name: item.description
       }));
 
-      console.log('Suggestions:', suggestions);
       return suggestions;
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -38,6 +38,7 @@ const TickerForm = () => {
 
   const onSuggestionsFetchRequested = async ({ value }) => {
     const suggestions = await fetchSuggestions(value);
+    console.log('Fetched suggestions:', suggestions); // Add this line to check suggestions
     setSuggestions(suggestions);
   };
 
@@ -47,17 +48,22 @@ const TickerForm = () => {
 
   const getSuggestionValue = (suggestion) => suggestion.symbol;
 
-  const renderSuggestion = (suggestion) => (
-    <div>
-      {suggestion.symbol} - {suggestion.name}
-    </div>
-  );
+  const renderSuggestion = (suggestion) => {
+    console.log('Rendering suggestion:', suggestion); // Add this line to send a message to the console
+    return (
+      <div>
+        {suggestion.symbol} - {suggestion.name}
+      </div>
+    );
+  };
 
-  const inputProps = {
-    id: 'ticker-input',
-    placeholder: 'Enter a ticker symbol',
-    value,
-    onChange: onChange
+  // Define your theme object using the classes from your theme.css file
+  const theme = {
+    container: 'container',
+    input: 'input',
+    suggestionsContainer: 'suggestionsContainer',
+    suggestion: 'suggestion',
+    suggestionHighlighted: 'suggestionHighlighted'
   };
 
   return (
@@ -68,7 +74,8 @@ const TickerForm = () => {
         onSuggestionsClearRequested={onSuggestionsClearRequested}
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
+        inputProps={{ id: 'ticker-input', placeholder: 'Enter a ticker symbol', value, onChange }}
+        theme={theme} // Apply the theme object here
       />
     </div>
   );
