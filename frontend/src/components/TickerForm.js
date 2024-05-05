@@ -54,7 +54,7 @@ const TickerForm = () => {
 
   const onSuggestionsFetchRequested = async ({ value }) => {
     const suggestions = await fetchSuggestions(value);
-    console.log('Fetched suggestions:', suggestions); // Add this line to check suggestions
+    // console.log('Fetched suggestions:', suggestions); 
     setSuggestions(suggestions);
   };
 
@@ -65,7 +65,7 @@ const TickerForm = () => {
   const getSuggestionValue = (suggestion) => suggestion.symbol;
 
   const renderSuggestion = (suggestion) => {
-    console.log('Rendering suggestion:', suggestion); // Add this line to send a message to the console
+    // console.log('Rendering suggestion:', suggestion); 
     return (
       <div>
         {suggestion.symbol} - {suggestion.name}
@@ -80,6 +80,22 @@ const TickerForm = () => {
 
   const addTickerToPortfolio = async (ticker) => {
     try {
+      // Fetch current portfolio tickers
+      const tickersResponse = await fetch('/portfolio-tickers');
+      if (!tickersResponse.ok) {
+        console.error('Failed to fetch portfolio tickers:', tickersResponse.statusText);
+        return;
+      }
+      const currentTickersData = await tickersResponse.json();
+      const currentTickers = currentTickersData.tickers;
+      console.log('Portfolio tickers before addition attempt:', currentTickers)
+      
+      // Check if adding the new ticker exceeds the limit
+      if (currentTickers.length >= 5) {
+        console.error('Cannot add more than 5 tickers to the portfolio.');
+        return;
+      }
+
       const response = await fetch('/add-tickers', {
         method: 'POST',
         headers: {

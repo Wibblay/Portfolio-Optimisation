@@ -56,6 +56,7 @@ def symbol_search():
 ##PORTFOLIO ROUTES##   
 @app.route('/portfolio-tickers')
 def get_portfolio_tickers():
+    print("Portfolio ticker request received")
     tickers = new_portfolio.tickers
     return jsonify({'tickers': tickers})
 
