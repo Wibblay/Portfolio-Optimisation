@@ -3,12 +3,12 @@ import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
 import './TickerForm.css'; 
 import '../styles/AutosuggestTheme.css';
-import { PortfolioContext } from '../PortfolioContext'; // Correct the import path if necessary
+import { PortfolioContext } from '../PortfolioContext'; 
 
 const TickerForm = () => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const { portfolioTickers, addTicker } = useContext(PortfolioContext); // Use context
+  const { portfolioAssets, addAsset } = useContext(PortfolioContext);
 
   const fetchSuggestions = async (value) => {
     try {
@@ -47,16 +47,16 @@ const TickerForm = () => {
   );
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    if (!portfolioTickers.includes(suggestion.symbol)) {
-      if (portfolioTickers.length >= 5) {
-        alert('Cannot add more than 5 tickers to the portfolio.');
+    if (!portfolioAssets.some(asset => asset.symbol === suggestion.symbol)) {
+      if (portfolioAssets.length >= 5) {
+        alert('Cannot add more than 5 assets to the portfolio.');
       } else {
-        addTicker(suggestion.symbol);
+        addAsset({symbol: suggestion.symbol, name: suggestion.name});
       }
     } else {
-      alert('Ticker already in portfolio.');
+      alert('Asset already in portfolio.');
     }
-    setValue(''); // Clear the input after the ticker is selected
+    setValue(''); // Clear the input after the asset is selected
   };
 
   const onChange = (event, { newValue }) => {

@@ -50,7 +50,6 @@ def symbol_search():
     api_key = os.environ.get('FINNHUB_API_KEY')
 
     try:
-        logging.debug(api_key)
         response = requests.get(endpoint, params={'q': query, 'token': api_key})
         if response.status_code == 200:
             return jsonify(response.json())
@@ -61,23 +60,32 @@ def symbol_search():
         return jsonify({'error': 'Network error'}), 503
 
 ##PORTFOLIO ROUTES##   
-@app.route('/portfolio-tickers')
+@app.route('/api/portfolio-tickers', methods=['GET'])
 def get_portfolio_tickers():
-    print("Portfolio ticker request received")
-    tickers = new_portfolio.tickers
-    return jsonify({'tickers': tickers})
+    logging.debug("Portfolio ticker request received")
+    assets = [{'symbol': asset['symbol'], 'name': asset['name']} for asset in new_portfolio.assets]
+    return jsonify({'assets': assets})
 
-@app.route('/add-tickers', methods=['POST'])
+@app.route('/api/add-tickers', methods=['POST'])
 def add_tickers():
-    # Extract ticker data from the request
-    ticker_data = request.json
-    print("Ticker to add:", ticker_data['tickers'][0])
-    
-    # Add the tickers to the portfolio
-    new_portfolio.add_tickers(ticker_data['tickers'])
-    
-    # Return a response (optional)
-    return jsonify({'message': 'Tickers added successfully'}), 200
+    asset = request.json
+    logging.debug(f"Ticker to add: {asset['symbol']}")
+    new_portfolio.add_asset(asset)
+    return jsonify({'message': 'Asset added successfully'}), 200
+
+@app.route('/api/remove-ticker/<symbol>', methods=['DELETE'])
+def remove_ticker(symbol):
+    logging.debug(f"Request to remove ticker: {symbol}")
+    try:
+        if new_portfolio.remove_asset(symbol):
+            logging.info(f"Asset removed successfully: {symbol}")
+            return jsonify({'message': 'Asset removed successfully'}), 200
+        else:
+            logging.warning(f"Attempt to remove non-existing asset: {symbol}")
+            return jsonify({'error': 'Asset not found'}), 404
+    except Exception as e:
+        logging.error(f"Error removing asset {symbol}: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 
 if __name__ == '__main__':

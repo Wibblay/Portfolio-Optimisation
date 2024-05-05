@@ -1,0 +1,36 @@
+/* PortfolioDisplay.css */
+.portfolio-display {
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 90%;
+    margin: 20px auto;
+}
+
+.asset-container {
+    display: flex;
+    justify-content: space-between; /* Ensures spacing between the asset info and the button */
+    align-items: center; /* Vertically centers the contents of the container */
+    background-color: #ffffff;
+    border: 1px solid #dedede;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.remove-button {
+    padding: 5px 10px;
+    font-size: 16px;
+    color: #ff0000; /* Red color for the remove button */
+    border: none;
+    background-color: #fff; /* Optional: could be set to a different color or transparent */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners for the button */
+}
+
+.remove-button:hover {
+    background-color: #f2f2f2; /* Light grey background on hover for better user interaction */
+}
+

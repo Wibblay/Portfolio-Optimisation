@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from scipy.optimize import minimize
 
 class Portfolio:
-    def __init__(self, tickers=None, start_date=None, end_date=None, initial_weights=None):
+    def __init__(self, assets=None, start_date=None, end_date=None, initial_weights=None):
         """
         Initialize a portfolio with given assets and weights.
         
@@ -13,10 +13,10 @@ class Portfolio:
         - end_date (str, optional): End date in the format "YYYY-MM-DD" (default: current date).
         - initial_weights (dict, optional): Initial weights for each asset (default: None).
         """
-        if tickers is None:
-            self.tickers = []
+        if assets is None:
+            self.assets = []
         else:
-            self.tickers = tickers
+            self.assets = assets
         
         if start_date is None:
             self.start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
@@ -39,19 +39,27 @@ class Portfolio:
         self.portfolio_value = None
         self.statistics = None
 
-    def add_tickers(self, tickers):
-        # Add tickers to the portfolio
-        self.tickers.extend(tickers)
+    def add_asset(self, asset):
+        """
+        Add an asset to the portfolio.
+        Args:
+        - asset (dict): Asset to add (e.g., {"symbol": "GOOGL", "name": "Alphabet Inc."}).
+        """
+        if not any(a['symbol'] == asset['symbol'] for a in self.assets):
+            self.assets.append(asset)
+        else:
+            print("Asset already in portfolio.")
+
+    def remove_asset(self, symbol):
+        original_count = len(self.assets)
+        self.assets = [asset for asset in self.assets if asset['symbol'] != symbol]
+        return len(self.assets) < original_count
     
     def _retrieve_historical_data(self):
         """Retrieve historical stock prices for the portfolio assets."""
-        # Fetch historical data for the tickers
-        data = yf.download(self.tickers, start=self.start_date, end=self.end_date)
-        
-        # Drop any NaN values
+        tickers = [asset['symbol'] for asset in self.assets]
+        data = yf.download(tickers, start=self.start_date, end=self.end_date)
         data.dropna(inplace=True)
-        
-        # Return the DataFrame
         return data
     
     def _calculate_daily_returns(self):
