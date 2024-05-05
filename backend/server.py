@@ -1,10 +1,17 @@
 from flask import Flask, send_from_directory, jsonify, request
 import requests
 from flask_cors import CORS
+from dotenv import load_dotenv
 import os
+import logging
 
 from src.portfolio import Portfolio
 #http://127.0.0.1:5000/
+
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=dotenv_path)
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -14,44 +21,44 @@ new_portfolio = Portfolio()
 ##INIT ROUTES##
 @app.route('/')
 def index():
-    print("Request received for index route")
+    logging.debug("Request received for index route")
     return send_from_directory(os.path.join('..', 'frontend', 'build'), 'index.html')
 
 @app.route('/static/js/<path:filename>')
 def static_files_js(filename):
-    print("Request received for js static files route:", filename) 
+    logging.debug("Request received for js static files route:", filename) 
     return send_from_directory(os.path.join('..', 'frontend', 'build', 'static', 'js'), filename)
 
 @app.route('/static/css/<path:filename>')
 def static_files_css(filename):
-    print("Request received for css static files route:", filename) 
+    logging.debug("Request received for css static files route:", filename) 
     return send_from_directory(os.path.join('..', 'frontend', 'build', 'static', 'css'), filename)
 
 @app.route('/<path:filename>')
 def other_files(filename):
-    print("Request received for other files route:", filename) 
+    logging.debug("Request received for other files route:", filename) 
     return send_from_directory(os.path.join('..', 'frontend', 'build'), filename)
 
 ##API ROUTES##
 @app.route('/symbol-search')
 def symbol_search():
-    print("Request received for Finnhub API")
+    logging.debug("Request received for Finnhub API")
     query = request.args.get('query')
 
     # Finnhub API endpoint and API key
     endpoint = 'https://finnhub.io/api/v1/search'
-    api_key = 'cor5ldpr01qm70u0g5k0cor5ldpr01qm70u0g5kg'  # Replace with your Finnhub API key
+    api_key = os.environ.get('FINNHUB_API_KEY')
 
-    # Make request to Finnhub API
-    response = requests.get(endpoint, params={'q': query, 'token': api_key})
-
-    # Check if request was successful
-    if response.status_code == 200:
-        # Parse JSON response and return to client
-        return jsonify(response.json())
-    else:
-        # Return error message if request failed
-        return jsonify({'error': 'Failed to fetch data from Finnhub API'}), 500
+    try:
+        logging.debug(api_key)
+        response = requests.get(endpoint, params={'q': query, 'token': api_key})
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            return jsonify({'error': 'Failed to fetch data from Finnhub API'}), 500
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request failed: {e}")
+        return jsonify({'error': 'Network error'}), 503
 
 ##PORTFOLIO ROUTES##   
 @app.route('/portfolio-tickers')

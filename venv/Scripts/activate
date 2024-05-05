@@ -67,3 +67,5 @@ fi
 if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
     hash -r 2> /dev/null
 fi
+
+export FINNHUB_API_KEY='cor5ldpr01qm70u0g5k0cor5ldpr01qm70u0g5kg'
