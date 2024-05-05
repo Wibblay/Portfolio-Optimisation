@@ -1,20 +1,18 @@
-// src/App.js
 import React from 'react';
+import { PortfolioProvider } from './PortfolioContext';
 import TickerForm from './components/TickerForm';
-import OptimizeButton from './components/OptimizeButton';
+import PortfolioDisplay from './components/PortfolioDisplay';
+import './styles/Layout.css';
 
 function App() {
-    const handleOptimizeClick = () => {
-        // Handle optimization button click (e.g., trigger optimization process)
-        console.log('Optimize button clicked');
-    };
-
     return (
-        <div>
-            <h1>Portfolio Optimization Tool</h1>
-            <TickerForm />
-            <OptimizeButton onClick={handleOptimizeClick} />
-        </div>
+        <PortfolioProvider>
+            <div>
+                <h1>Portfolio Optimization Tool</h1>
+                <TickerForm />
+                <PortfolioDisplay />
+            </div>
+        </PortfolioProvider>
     );
 }
 

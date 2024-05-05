@@ -1,0 +1,20 @@
+/* Layout.css */
+.container {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Align children in the center horizontally */
+    width: 100%; /* Full width */
+}
+
+.ticker-form {
+    width: 90%; /* or any specific width */
+    margin: 20px; /* Space around the form */
+}
+
+.portfolio-display {
+    width: 90%; /* Match the ticker form width */
+    margin: 20px; /* Space around the portfolio display */
+    background-color: #f3f3f3; /* Light grey background for visibility */
+    padding: 20px; /* Padding inside the container */
+    border-radius: 8px; /* Rounded corners */
+}
