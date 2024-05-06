@@ -2,15 +2,17 @@
 
 /* Style for the container div */
 .ticker-form {
-  width: 300px; /* Adjust the width as needed */
-  margin: 20px auto; /* Center the form horizontally */
+  width: 100%;  /* This ensures it fills the intended space */
+  padding: 20px;  /* Adds padding around the form content */
+  box-sizing: border-box; /* Ensures padding is included in the width calculation */
 }
 
 /* Style for the input field */
 .ticker-input {
-  width: 100%;
+  width: calc(100% - 40px); /* Adjusts width to account for padding */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-right: 20px; /* Adds right margin to the input */
 }

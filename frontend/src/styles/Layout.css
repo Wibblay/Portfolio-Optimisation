@@ -1,20 +1,17 @@
 /* Layout.css */
-.container {
+.dashboard {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Align children in the center horizontally */
-    width: 100%; /* Full width */
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    width: 50%; /* Only take up half the screen */
+    padding-left: 20px; /* Add padding for spacing from the screen edge */
 }
 
-.ticker-form {
-    width: 90%; /* or any specific width */
-    margin: 20px; /* Space around the form */
-}
-
-.portfolio-display {
-    width: 90%; /* Match the ticker form width */
-    margin: 20px; /* Space around the portfolio display */
-    background-color: #f3f3f3; /* Light grey background for visibility */
-    padding: 20px; /* Padding inside the container */
-    border-radius: 8px; /* Rounded corners */
+.ticker-form, .portfolio-display {
+    width: 100%; /* Ensure these take up the full width of their container */
+    margin: 10px 0;
+    padding: 20px;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

@@ -1,11 +1,15 @@
 from flask import Flask, send_from_directory, jsonify, request
 import requests
+import json
 from flask_cors import CORS
 from dotenv import load_dotenv
+import datetime
+import pandas as pd
 import os
 import logging
 
 from src.portfolio import Portfolio
+from src.data_fetcher import fetch_historical_data
 #http://127.0.0.1:5000/
 
 # Setup logging
@@ -56,7 +60,7 @@ def symbol_search():
         else:
             return jsonify({'error': 'Failed to fetch data from Finnhub API'}), 500
     except requests.exceptions.RequestException as e:
-        logging.error(f"Request failed: {e}")
+        logging.error("Request failed:", e)
         return jsonify({'error': 'Network error'}), 503
 
 ##PORTFOLIO ROUTES##   
@@ -69,23 +73,45 @@ def get_portfolio_tickers():
 @app.route('/api/add-tickers', methods=['POST'])
 def add_tickers():
     asset = request.json
-    logging.debug(f"Ticker to add: {asset['symbol']}")
+    logging.debug("Ticker to add:", asset['symbol'])
     new_portfolio.add_asset(asset)
     return jsonify({'message': 'Asset added successfully'}), 200
 
 @app.route('/api/remove-ticker/<symbol>', methods=['DELETE'])
 def remove_ticker(symbol):
-    logging.debug(f"Request to remove ticker: {symbol}")
+    logging.debug("Request to remove ticker: %s", symbol)
     try:
         if new_portfolio.remove_asset(symbol):
-            logging.info(f"Asset removed successfully: {symbol}")
+            logging.info("Asset removed successfully:", symbol)
             return jsonify({'message': 'Asset removed successfully'}), 200
         else:
-            logging.warning(f"Attempt to remove non-existing asset: {symbol}")
+            logging.warning("Attempt to remove non-existing asset: %s", symbol)
             return jsonify({'error': 'Asset not found'}), 404
     except Exception as e:
-        logging.error(f"Error removing asset {symbol}: {str(e)}")
+        logging.error("Error removing asset %s %s", symbol, str(e))
         return jsonify({'error': 'Internal Server Error'}), 500
+    
+@app.route('/api/historical-data/<ticker>')
+def historical_data(ticker):
+    logging.debug("Request for historical data: %s", ticker)
+    # Fetch start and end dates from query parameters or set defaults
+    today = datetime.datetime.now()
+    one_month_ago = today - datetime.timedelta(days=30)
+    
+    # Format dates as YYYY-MM-DD
+    default_start_date = one_month_ago.strftime('%Y-%m-%d')
+    default_end_date = today.strftime('%Y-%m-%d')
+    
+    start_date = request.args.get('start', default_start_date)
+    end_date = request.args.get('end', default_end_date)
+    
+    # Fetch historical data using the provided or default dates
+    data = fetch_historical_data([ticker], start_date, end_date)
+    if isinstance(data.index, pd.DatetimeIndex):
+        data.index = data.index.strftime('%Y-%m-%d')
+    
+    # Convert data to a dictionary and return JSON
+    return jsonify(data.reset_index().to_dict(orient='records'))
 
 
 if __name__ == '__main__':

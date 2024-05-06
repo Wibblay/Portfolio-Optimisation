@@ -4,14 +4,15 @@
     background-color: #f8f8f8;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 90%;
-    margin: 20px auto;
+    width: 100%; /* Adjust to fit within the container set by Layout.css */
+    margin: 20px 10px; /* Adjusted margins to align with overall layout */
+    box-sizing: border-box; /* Ensures padding and border are included in width */
 }
 
 .asset-container {
     display: flex;
-    justify-content: space-between; /* Ensures spacing between the asset info and the button */
-    align-items: center; /* Vertically centers the contents of the container */
+    justify-content: space-between; /* Align children to each side */
+    align-items: start; /* Align children to the top */
     background-color: #ffffff;
     border: 1px solid #dedede;
     padding: 10px;
@@ -20,17 +21,26 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+.asset-details {
+    text-align: left;
+}
+
 .remove-button {
     padding: 5px 10px;
     font-size: 16px;
     color: #ff0000; /* Red color for the remove button */
     border: none;
-    background-color: #fff; /* Optional: could be set to a different color or transparent */
+    background-color: #fff;
     cursor: pointer;
-    border-radius: 5px; /* Rounded corners for the button */
+    border-radius: 5px;
+    margin-left: auto; /* Push the button to the far right */
 }
 
 .remove-button:hover {
-    background-color: #f2f2f2; /* Light grey background on hover for better user interaction */
+    background-color: #f2f2f2; /* Light grey background on hover */
 }
 
+.price-chart-container {
+    width: 100%;
+    margin-top: 10px;
+}

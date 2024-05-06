@@ -7,7 +7,7 @@ import './styles/Layout.css';
 function App() {
     return (
         <PortfolioProvider>
-            <div>
+            <div className="dashboard">
                 <h1>Portfolio Optimization Tool</h1>
                 <TickerForm />
                 <PortfolioDisplay />
