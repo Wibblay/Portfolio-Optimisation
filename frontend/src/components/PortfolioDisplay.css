@@ -12,7 +12,7 @@
 .asset-container {
     display: flex;  
     width: 100%;
-    height: 150px;
+    height: 200px;
     background-color: var(--background-color); /* Main dark background for assets */
     border: 1px solid var(--border-color); /* Subtle border in theme style */
     padding: 10px;
@@ -27,6 +27,10 @@
     max-width: 33%; /* Maximum width is 33% */
     text-align: left;
     color: var(--foreground-color); /* Text color for asset details */
+    font-size: 14px;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    gap: 1px;
 }
 
 .chart-and-remove {
@@ -57,7 +61,7 @@
 
 .price-chart-container {
     width: 100%;
-    height: 100px;  /* Adapt to content height */
+    height: 140px;  /* Adapt to content height */
     position: relative;
     overflow: visible;
 }

@@ -8,6 +8,26 @@
     --box-shadow-color: rgba(0, 0, 0, 0.1); /* Shadow for elevated elements */
 }
 
+.header {
+    width: 100%; /* Full width */
+    padding: 15px 20px; /* Top and bottom padding and horizontal padding */
+    background-color: var(--secondary-background-color); /* Dark theme background */
+    color: var(--foreground-color); /* Text color */
+    font-size: 24px; /* Larger text for the header */
+    text-align: left; /* Centering the text */
+    box-shadow: 0 4px 6px var(--box-shadow-color); /* More prominent shadow for the header */
+    border-bottom: 1px solid var(--border-color); /* Adds a subtle border below the header */
+    position: relative;
+    z-index: 1000;
+}
+
+/* Additional styling to ensure the header text is visually appealing */
+.header h1 {
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes default padding */
+    font-weight: normal; /* Could be bold, depending on design preference */
+}
+
 body {
     background-color: var(--secondary-background-color); /* Use the same background variable for the body */
     color: var(--foreground-color); /* Ensures all text is easily readable */
@@ -36,4 +56,3 @@ body {
     box-shadow: 0 2px 4px var(--box-shadow-color); /* Shadow with transparency */
     border: 1px solid var(--border-color); /* Subtle borders for distinction */
 }
-
