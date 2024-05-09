@@ -1,0 +1,35 @@
+/* PriceChart.css */
+.price-chart {
+    width: 100%; /* Full width of its container to ensure it fills it */
+    height: 100%; /* Height can adjust based on the content or a fixed ratio */
+    overflow: hidden; /* Prevents any overflow from the chart elements */
+    background-color: var(--background-color); /* Ensuring it fits the dark theme background */
+    color: var(--foreground-color); /* Adjusting text and line colors to fit the dark theme */
+}
+
+.price-chart svg {
+    width: 100%;
+    height: auto; /* Adjust if necessary to ensure it fills container */
+}
+
+/* Additional styles for customizing chart components, ensuring they match the dark theme */
+.LineChart path,
+.LineChart line {
+    stroke: var(--light-grey); /* Changing the stroke color for lines */
+}
+
+.LineChart text {
+    fill: var(--light-grey); /* Adjusting the color of text in charts */
+}
+
+.CartesianGrid {
+    stroke: var(--border-color); /* Making grid lines subtler and more theme-appropriate */
+}
+
+.Tooltip {
+    background-color: var(--secondary-background-color); /* Tooltip background that fits the dark theme */
+    border: 1px solid var(--border-color); /* Subtle border for tooltips */
+    color: var(--text-color); /* Ensuring text is readable */
+}
+
+

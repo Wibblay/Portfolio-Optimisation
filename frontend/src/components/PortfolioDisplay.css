@@ -1,46 +1,63 @@
 /* PortfolioDisplay.css */
 .portfolio-display {
     padding: 20px;
-    background-color: #f8f8f8;
+    background-color: var(--secondary-background-color); /* Darker background for the display */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 100%; /* Adjust to fit within the container set by Layout.css */
-    margin: 20px 10px; /* Adjusted margins to align with overall layout */
-    box-sizing: border-box; /* Ensures padding and border are included in width */
+    width: 100%;
+    margin: 20px 10px;
+    box-sizing: border-box;
 }
 
 .asset-container {
-    display: flex;
-    justify-content: space-between; /* Align children to each side */
-    align-items: start; /* Align children to the top */
-    background-color: #ffffff;
-    border: 1px solid #dedede;
+    display: flex;  
+    width: 100%;
+    height: 150px;
+    background-color: var(--background-color); /* Main dark background for assets */
+    border: 1px solid var(--border-color); /* Subtle border in theme style */
     padding: 10px;
     margin-top: 10px;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-sizing: border-box; 
 }
 
 .asset-details {
+    flex: 1; /* Flex-grow 1 with no flex-basis specified */
+    max-width: 33%; /* Maximum width is 33% */
     text-align: left;
+    color: var(--foreground-color); /* Text color for asset details */
+}
+
+.chart-and-remove {
+    flex: 2; /* Takes up the remaining 2 parts of the space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Aligns children from top to bottom */
+    align-items: flex-end; /* Aligns children to the right of the container */
+    height: 100%; /* Ensure it has height to distribute between children */
+    width: 66%; /* Explicitly setting the width to 66% of the parent container */
 }
 
 .remove-button {
     padding: 5px 10px;
     font-size: 16px;
-    color: #ff0000; /* Red color for the remove button */
+    color: var(--light-grey);
     border: none;
-    background-color: #fff;
+    background-color: var(--background-color);
     cursor: pointer;
     border-radius: 5px;
-    margin-left: auto; /* Push the button to the far right */
+    transition: background-color 0.3s ease;
 }
 
 .remove-button:hover {
-    background-color: #f2f2f2; /* Light grey background on hover */
+    background-color: var(--hover-background-color); /* Slightly lighter/darker on hover */
+    color: var(--accent-color); /* Optionally change color on hover for better visibility */
 }
 
 .price-chart-container {
     width: 100%;
-    margin-top: 10px;
+    height: 100px;  /* Adapt to content height */
+    position: relative;
+    overflow: visible;
 }

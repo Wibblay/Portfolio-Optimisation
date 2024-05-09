@@ -1,7 +1,7 @@
 // PortfolioDisplay.js
 import React, { useContext, useEffect, useState } from 'react';
-import { PortfolioContext } from '../PortfolioContext';
-import PriceChart from './PriceChart';
+import { PortfolioContext } from '../hooks/PortfolioContext';
+import PriceChart from './PriceChart.js';
 import './PortfolioDisplay.css';
 
 const PortfolioDisplay = () => {
@@ -16,17 +16,24 @@ const PortfolioDisplay = () => {
                         <p><strong>Ticker:</strong> {asset.symbol}</p>
                         <p><strong>Name:</strong> {asset.name}</p>
                     </div>
-                    <button 
-                        onClick={() => removeAsset(asset.symbol)}
-                        className="remove-button"
-                    >
-                        X
-                    </button>
-                    <AssetPriceChart symbol={asset.symbol} /> {/* Add this line to include the price chart */}
+                    <div className="chart-and-remove">
+                        <div className="remove-button-container">
+                            <button 
+                                onClick={() => removeAsset(asset.symbol)}
+                                className="remove-button"
+                            >
+                                X
+                            </button>
+                        </div>
+                        <div className="price-chart-container">
+                            <AssetPriceChart symbol={asset.symbol} />
+                        </div>
+                    </div>
                 </div>
             ))}
         </div>
     );
+    
 };
 
 export default PortfolioDisplay;
@@ -35,6 +42,8 @@ const AssetPriceChart = ({ symbol }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+        let isMounted = true;
+
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/historical-data/${symbol}`);
@@ -43,13 +52,18 @@ const AssetPriceChart = ({ symbol }) => {
                     date: item.Date, // Assuming the API returns 'date'
                     price: item.Close // Assuming the API returns 'close' price
                 }));
-                setData(formattedData);
+                if (isMounted) setData(formattedData);
             } catch (error) {
                 console.error("Failed to fetch price data", error);
             }
         };
         fetchData();
+
+        return () => {
+            isMounted = false; // Set it to false when the component unmounts
+        };
     }, [symbol]);
 
-    return <PriceChart data={data} />;
+    // Render PriceChart only if data is not empty
+    return data.length > 0 ? <PriceChart data={data} /> : <div>Loading chart...</div>;
 };

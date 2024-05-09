@@ -2,43 +2,70 @@
 
 /* Styles for the container div */
 .container {
-    position: relative;
-    width: 100%;
-  }
-  
-  /* Styles for the input field */
-  .input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  /* Styles for the suggestions container */
-  .suggestionsContainer {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 200px; /* Adjust the maximum height as needed */
-    overflow-y: auto; /* Enable vertical scrolling */
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-top: none;
-    border-radius: 4px;
-    z-index: 999; /* Ensure suggestions appear above other elements */
-  }
-  
-  /* Styles for individual suggestion items */
-  .suggestion {
-    list-style-type: none;
-    padding: 5px 0;
-    cursor: pointer;
-  }
-  
-  /* Styles for the highlighted suggestion item */
-  .suggestionHighlighted {
-    background-color: #f0f0f0;
-  }
-  
+  position: relative;
+  width: 100%;
+}
+
+/* Styles for the input field */
+.input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: var(--foreground-color); /* Light grey text color for input */
+  background-color: var(--background-color); /* Dark background for input */
+  border: 1px solid var(--border-color); /* Subtle border from the theme */
+  border-radius: 4px;
+  box-sizing: border-box; 
+}
+
+/* Styles for the suggestions container */
+.suggestionsContainer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--secondary-background-color);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 4px;
+  z-index: 999;
+  padding-left: 0;
+  scrollbar-width: thin;  
+  scrollbar-color: var(--border-color) var(--background-color);  
+}
+
+/* Custom scrollbar styles */
+.suggestionsContainer::-webkit-scrollbar {
+  width: 12px;  
+}
+
+.suggestionsContainer::-webkit-scrollbar-track {
+  background: var(--background-color);  
+  border-radius: 10px;
+}
+
+.suggestionsContainer::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);  
+  border-radius: 10px;
+  border: 3px solid var(--background-color);  
+}
+
+.suggestionsContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);  
+}
+
+/* Styles for individual suggestion items */
+.suggestion {
+  list-style-type: none;
+  padding: 10px 20px;  
+  cursor: pointer;
+  color: var(--foreground-color);
+}
+
+/* Styles for the highlighted suggestion item */
+.suggestionHighlighted {
+  background-color: var(--accent-color); /* Highlight color for active item */
+  color: #ffffff; /* White text color for highlighted suggestion */
+}

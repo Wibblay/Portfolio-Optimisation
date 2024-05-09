@@ -4,7 +4,11 @@
 .ticker-form {
   width: 100%;  /* This ensures it fills the intended space */
   padding: 20px;  /* Adds padding around the form content */
+  background-color: var(--secondary-background-color); /* Sets background color from the theme */
+  color: var(--foreground-color); /* Sets the text color from the theme */
   box-sizing: border-box; /* Ensures padding is included in the width calculation */
+  border-radius: 8px; /* Rounds the corners */
+  box-shadow: 0 2px 4px var(--box-shadow-color); /* Adds subtle shadow from the theme */
 }
 
 /* Style for the input field */
@@ -12,7 +16,23 @@
   width: calc(100% - 40px); /* Adjusts width to account for padding */
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  color: var(--foreground-color); /* Text color for the input */
+  background-color: var(--background-color); /* Dark background for the input */
+  border: 1px solid var(--border-color); /* Subtle border color from the theme */
   border-radius: 4px;
   margin-right: 20px; /* Adds right margin to the input */
+
+  /* Enhances placeholder visibility */
+  ::placeholder {
+    color: var(--foreground-color); /* Lighter text color for placeholders */
+    opacity: 0.7; /* Slightly transparent */
+  }
 }
+
+/* Style for focus on inputs to enhance usability */
+.ticker-input:focus {
+  outline: none; /* Removes default focus outline */
+  border-color: var(--accent-color); /* Highlight input with accent color on focus */
+  box-shadow: 0 0 8px var(--accent-color); /* Adds a glow effect using the accent color */
+}
+

@@ -3,7 +3,7 @@ import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
 import './TickerForm.css'; 
 import '../styles/AutosuggestTheme.css';
-import { PortfolioContext } from '../PortfolioContext'; 
+import { PortfolioContext } from '../hooks/PortfolioContext'; 
 
 const TickerForm = () => {
   const [value, setValue] = useState('');

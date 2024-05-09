@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { PortfolioProvider } from './PortfolioContext'; 
+import { PortfolioProvider } from './hooks/PortfolioContext'; 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

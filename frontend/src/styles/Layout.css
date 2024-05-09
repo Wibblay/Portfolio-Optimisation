@@ -1,17 +1,39 @@
 /* Layout.css */
-.dashboard {
+:root {
+    --background-color: #1e1e1e; /* Dark grey, base background color */
+    --foreground-color: #d4d4d4; /* Light grey, primary text color */
+    --accent-color: #007acc; /* Blue, for highlights and important elements */
+    --border-color: #3c3c3c; /* Slightly lighter grey, for borders and separators */
+    --secondary-background-color: #252526; /* A shade darker for background of elements */
+    --box-shadow-color: rgba(0, 0, 0, 0.1); /* Shadow for elevated elements */
+}
+
+body {
+    background-color: var(--secondary-background-color); /* Use the same background variable for the body */
+    color: var(--foreground-color); /* Ensures all text is easily readable */
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes default padding */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Optional: Set a global font */
+}
+
+.portfolio-builder {
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* Align items to the left */
-    width: 50%; /* Only take up half the screen */
+    width: 45%; /* Only take up half the screen */
+    min-width: 420px;
     padding-left: 20px; /* Add padding for spacing from the screen edge */
+    background-color: var(--secondary-background-color); /* Darker background for the builder area */
+    color: var(--foreground-color); /* Main text color */
 }
 
 .ticker-form, .portfolio-display {
     width: 100%; /* Ensure these take up the full width of their container */
     margin: 10px 0;
     padding: 20px;
-    background-color: #f3f3f3;
+    background-color: var(--background-color); /* Main background color */
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px var(--box-shadow-color); /* Shadow with transparency */
+    border: 1px solid var(--border-color); /* Subtle borders for distinction */
 }
+

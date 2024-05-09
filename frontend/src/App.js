@@ -1,5 +1,5 @@
 import React from 'react';
-import { PortfolioProvider } from './PortfolioContext';
+import { PortfolioProvider } from './hooks/PortfolioContext';
 import TickerForm from './components/TickerForm';
 import PortfolioDisplay from './components/PortfolioDisplay';
 import './styles/Layout.css';
@@ -7,7 +7,7 @@ import './styles/Layout.css';
 function App() {
     return (
         <PortfolioProvider>
-            <div className="dashboard">
+            <div className="portfolio-builder">
                 <h1>Portfolio Optimization Tool</h1>
                 <TickerForm />
                 <PortfolioDisplay />
