@@ -82,7 +82,7 @@ def remove_ticker(symbol):
     logging.debug("Request to remove ticker: %s", symbol)
     try:
         if new_portfolio.remove_asset(symbol):
-            logging.info("Asset removed successfully:", symbol)
+            logging.info("Asset removed successfully: %s", symbol)
             return jsonify({'message': 'Asset removed successfully'}), 200
         else:
             logging.warning("Attempt to remove non-existing asset: %s", symbol)

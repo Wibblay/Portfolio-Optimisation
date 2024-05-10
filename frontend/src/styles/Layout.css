@@ -8,6 +8,34 @@
     --box-shadow-color: rgba(0, 0, 0, 0.1); /* Shadow for elevated elements */
 }
 
+#root {
+    height: 100%;
+}
+
+body {
+    background-color: var(--secondary-background-color); /* Use the same background variable for the body */
+    color: var(--foreground-color); /* Ensures all text is easily readable */
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes default padding */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Optional: Set a global font */
+    height: 100%;
+}
+
+html {
+    height: 100%; /* Ensures they take the full height of the viewport */
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes default padding */
+    overflow: hidden; /* Optional: prevents scrolling if not needed */
+}
+
+.main-container {
+    display: flex;
+    width: 100%; /* Takes full width of the viewport */
+    height: 100%; /* Optional: Takes full height if needed */
+    flex-direction: row; /* Arranges children vertically */
+    overflow: auto;
+}
+
 .header {
     width: 100%; /* Full width */
     padding: 15px 20px; /* Top and bottom padding and horizontal padding */
@@ -28,14 +56,6 @@
     font-weight: normal; /* Could be bold, depending on design preference */
 }
 
-body {
-    background-color: var(--secondary-background-color); /* Use the same background variable for the body */
-    color: var(--foreground-color); /* Ensures all text is easily readable */
-    margin: 0; /* Removes default margin */
-    padding: 0; /* Removes default padding */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Optional: Set a global font */
-}
-
 .portfolio-builder {
     display: flex;
     flex-direction: column;
@@ -45,6 +65,7 @@ body {
     padding-left: 20px; /* Add padding for spacing from the screen edge */
     background-color: var(--secondary-background-color); /* Darker background for the builder area */
     color: var(--foreground-color); /* Main text color */
+    overflow: auto;
 }
 
 .ticker-form, .portfolio-display {
@@ -55,4 +76,38 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--box-shadow-color); /* Shadow with transparency */
     border: 1px solid var(--border-color); /* Subtle borders for distinction */
+}
+
+.optimization-tools {
+    background-color: var(--secondary-background-color); /* Matching the theme */
+    width: 55%; /* Adjust based on available space */
+    display: flex;
+    flex-direction: column;
+    overflow: auto; /* Allows scrolling within the section */
+    border-left: 1px solid var(--border-color); /* Adds a subtle border on the left */
+}
+
+.tab-toolbar {
+    background-color: var(--secondary-background-color); /* Using a darker shade for toolbar */
+    padding: 0; /* Remove padding to allow buttons to fill the toolbar */
+    display: flex;
+    border-bottom: 1px solid var(--border-color); /* Adds a subtle border below the toolbar */
+}
+
+.tab-toolbar button {
+    flex-grow: 1; /* Each button grows to fill available space */
+    padding: 10px 20px; /* Ample padding for clickable area */
+    border: none; /* No border for a clean look */
+    background-color: transparent; /* Transparent background to blend with toolbar */
+    color: var(--foreground-color); /* Light text color */
+    cursor: pointer;
+    outline: none; /* Removes the outline to match VSCode style */
+    transition: background-color 0.2s ease; /* Smooth transition for background color */
+    border-bottom: 3px solid transparent; /* Transparent border at bottom to mimic VSCode active tab */
+}
+
+.tab-toolbar button:hover, .tab-toolbar button.active {
+    background-color: var(--background-color); /* Lighter background on hover/active */
+    border-bottom-color: var(--accent-color); /* Accent color to indicate active/hover state */
+    color: var(--accent-color); /* Changes text color on active/hover */
 }
