@@ -67,13 +67,14 @@ def symbol_search():
 @app.route('/api/portfolio-tickers', methods=['GET'])
 def get_portfolio_tickers():
     logging.debug("Portfolio ticker request received")
-    assets = [{'symbol': asset['symbol'], 'name': asset['name']} for asset in new_portfolio.assets]
+    assets = [{'symbol': asset['symbol'], 'name': asset['name'], 'weight':asset['weight']} for asset in new_portfolio.assets]
+    logging.debug("Current assets:, %s", assets)
     return jsonify({'assets': assets})
 
 @app.route('/api/add-tickers', methods=['POST'])
 def add_tickers():
     asset = request.json
-    logging.debug("Ticker to add:", asset['symbol'])
+    logging.debug("Ticker to add: %s", asset['symbol'])
     new_portfolio.add_asset(asset)
     return jsonify({'message': 'Asset added successfully'}), 200
 

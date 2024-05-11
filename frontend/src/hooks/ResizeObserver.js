@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 
 export function useResizeObserver(ref) {
-    const [width, setWidth] = useState(null);
+    const [dimensions, setDimensions] = useState({ width: null, height: null });
 
     useEffect(() => {
         const observeTarget = ref.current;
         const resizeObserver = new ResizeObserver(entries => {
-            // Set width to the entry's contentRect width for the observed target
-            entries.forEach(entry => {
-                setWidth(entry.contentRect.width);
-            });
+            // Assume only one entry is observed (the container itself)
+            if (entries[0]) {
+                setDimensions({
+                    width: entries[0].contentRect.width,
+                    height: entries[0].contentRect.height
+                });
+            }
         });
 
         if (observeTarget) {
@@ -23,5 +26,6 @@ export function useResizeObserver(ref) {
         };
     }, [ref]);
 
-    return width;
+    return dimensions;
 }
+

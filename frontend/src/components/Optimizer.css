@@ -1,0 +1,57 @@
+/* Optimizer.css */
+.optimizer-section {
+    background-color: var(--secondary-background-color); /* Matching the theme */
+    width: 100%; /* Adjust based on available space */
+    display: flex;
+    flex-direction: column;
+    padding: 20px; /* Added padding */
+    overflow: auto;
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+.weight-display {
+    display: flex;
+    flex-direction: column; /* Ensures header and container row are stacked vertically */
+    width: 100%;
+    margin-bottom: 20px; /* Space between sections */
+}
+
+.weight-display-header {
+    margin-bottom: 20px; /* Adds space below the header */
+    width: 100%; /* Ensures it spans the entire width of the weight-display */
+    text-align: center; /* Optional: Center-aligns the header text */
+}
+
+.weight-display-content {
+    display: flex;
+    width: 100%; /* Ensures pie-chart-container and table-container are side by side */
+}
+
+.pie-chart-container, .table-container {
+    flex: 1; /* Each takes up half of the container */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content vertically in each container */
+    padding: 10px;
+    box-sizing: border-box;
+    min-width: 250px;
+}
+
+.pie-chart-container {
+    border-right: 1px solid var(--border-color); /* Adds a subtle separator between the containers */
+}
+
+.table-container {
+    overflow-x: auto; /* Allows horizontal scrolling if table is too wide */
+}
+
+.sliders-container {
+    padding: 20px;
+    margin-top: 20px;
+    background-color: var(--secondary-background-color); /* Use a consistent background */
+    border-top: 1px solid var(--border-color); /* Visually separate from content above */
+}
+
+.optimization-tools {
+    flex-grow: 2; /* Larger section for more complex tools */
+}

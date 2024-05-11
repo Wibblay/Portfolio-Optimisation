@@ -47,13 +47,21 @@ class Portfolio:
         """
         if not any(a['symbol'] == asset['symbol'] for a in self.assets):
             self.assets.append(asset)
+            self.recalculate_weights()
         else:
             print("Asset already in portfolio.")
 
     def remove_asset(self, symbol):
         original_count = len(self.assets)
         self.assets = [asset for asset in self.assets if asset['symbol'] != symbol]
+        self.recalculate_weights()
         return len(self.assets) < original_count
+    
+    def recalculate_weights(self):
+        if self.assets:
+            equal_weight = 1 / len(self.assets)
+            for asset in self.assets:
+                asset['weight'] = equal_weight
     
     def _retrieve_historical_data(self):
         """Retrieve historical stock prices for the portfolio assets."""

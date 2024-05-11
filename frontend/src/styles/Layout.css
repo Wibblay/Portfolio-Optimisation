@@ -81,6 +81,7 @@ html {
 .optimization-tools {
     background-color: var(--secondary-background-color); /* Matching the theme */
     width: 55%; /* Adjust based on available space */
+    min-width: 515px;
     display: flex;
     flex-direction: column;
     overflow: auto; /* Allows scrolling within the section */

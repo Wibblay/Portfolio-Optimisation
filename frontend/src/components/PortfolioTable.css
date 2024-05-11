@@ -1,0 +1,44 @@
+/* PortfolioTable.css */
+
+.portfolio-table {
+    width: 100%;
+    overflow: auto;  /* Allows for scrolling if the table overflows */
+    background-color: var(--secondary-background-color);
+    color: var(--foreground-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--box-shadow-color);
+}
+
+.portfolio-table table {
+    width: 100%; /* Ensures the table uses all available space */
+    border-collapse: collapse; /* Eliminates space between cells */
+    font-size: 16px; /* Adequate text size for readability */
+}
+
+.portfolio-table th, 
+.portfolio-table td {
+    text-align: left;
+    padding: 12px 20px; /* Comfortable padding around text */
+    border-bottom: 1px solid var(--border-color); /* Adds a subtle separator */
+}
+
+.portfolio-table th {
+    background-color: var(--background-color); /* Slightly lighter background for header */
+    color: var(--accent-color); /* Blue color for headers to stand out */
+}
+
+.portfolio-table tr:last-child td {
+    border-bottom: none; /* Removes border from the last row for a cleaner look */
+}
+
+.portfolio-table tbody tr:hover {
+    background-color: var(--background-color); /* Highlight row on hover */
+}
+
+/* Optional: Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+    .portfolio-table th, 
+    .portfolio-table td {
+        padding: 10px 5px; /* Reduces padding on smaller screens */
+    }
+}

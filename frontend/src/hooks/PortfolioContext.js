@@ -1,36 +1,39 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios'; // Axios is commonly used for HTTP requests
+import axios from 'axios';
 
-// Create the context
 export const PortfolioContext = createContext();
 
-// Provider component that wraps your app and provides state to components
 export const PortfolioProvider = ({ children }) => {
     const [portfolioAssets, setPortfolioAssets] = useState([]);
 
-    // Load initial data
-    useEffect(() => {
-        const fetchAssets = async () => {
-            try {
-                const response = await axios.get('/api/portfolio-tickers');
-                // Ensure that response.data or its correct key is always an array
-                setPortfolioAssets(Array.isArray(response.data) ? response.data : []);
-            } catch (error) {
-                console.error("Failed to fetch assets: ", error);
-                setPortfolioAssets([]); // Set to empty array on error
+    const fetchAssets = async () => {
+        try {
+            const response = await axios.get('/api/portfolio-tickers');
+            console.log("Fetch reponse: ", response)
+            if (response.status === 200 && Array.isArray(response.data.assets)) {
+                setPortfolioAssets(response.data.assets);
+            } else {
+                throw new Error('Invalid format for portfolio assets');
             }
-        };
-    
+        } catch (error) {
+            console.error("Failed to fetch assets: ", error);
+            setPortfolioAssets([]); // Optionally, reset on error or maintain old state
+        }
+    };
+
+    useEffect(() => {
         fetchAssets();
     }, []);
 
-    // Function to add an asset to the portfolio
     const addAsset = async (asset) => {
         if (!portfolioAssets.some(a => a.symbol === asset.symbol)) {
             try {
-                const response = await axios.post('/api/add-tickers', asset);
-                // Ensure the response contains the asset data in the expected format
-                setPortfolioAssets(prevAssets => [...prevAssets, response.data.asset || asset]); // Adjust based on actual response
+                const addResponse = await axios.post('/api/add-tickers', asset);
+                if (addResponse.status === 200) {
+                    fetchAssets(); // Refresh after a successful add
+                } else {
+                    throw new Error('Failed to add asset');
+                }
             } catch (error) {
                 console.error("Failed to add asset: ", error);
             }
@@ -39,11 +42,14 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
-    // Function to remove an asset from the portfolio
     const removeAsset = async (symbol) => {
         try {
-            await axios.delete(`/api/remove-ticker/${symbol}`);
-            setPortfolioAssets(prevAssets => prevAssets.filter(a => a.symbol !== symbol));
+            const removeResponse = await axios.delete(`/api/remove-ticker/${symbol}`);
+            if (removeResponse.status === 200) {
+                fetchAssets(); // Refresh after a successful remove
+            } else {
+                throw new Error('Failed to remove asset');
+            }
         } catch (error) {
             console.error("Failed to remove asset: ", error);
         }
@@ -56,5 +62,5 @@ export const PortfolioProvider = ({ children }) => {
     );
 };
 
-// Custom hook for easier context consumption
 export const usePortfolio = () => useContext(PortfolioContext);
+
