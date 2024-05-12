@@ -63,6 +63,7 @@ html {
     width: 45%; /* Only take up half the screen */
     min-width: 420px;
     padding-left: 20px; /* Add padding for spacing from the screen edge */
+    padding-bottom: 50px;
     background-color: var(--secondary-background-color); /* Darker background for the builder area */
     color: var(--foreground-color); /* Main text color */
     overflow: auto;
@@ -86,6 +87,7 @@ html {
     flex-direction: column;
     overflow: auto; /* Allows scrolling within the section */
     border-left: 1px solid var(--border-color); /* Adds a subtle border on the left */
+    padding-bottom: 50px;
 }
 
 .tab-toolbar {

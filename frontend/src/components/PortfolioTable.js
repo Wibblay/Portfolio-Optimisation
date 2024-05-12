@@ -15,7 +15,7 @@ const PortfolioTable = ({ assets }) => {
                     {assets.map(asset => (
                         <tr key={asset.symbol}>
                             <td>{asset.symbol}</td>
-                            <td>{asset.weight}%</td>
+                            <td>{100*asset.weight}%</td>
                         </tr>
                     ))}
                 </tbody>

@@ -1,0 +1,14 @@
+.slider-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.slider-label {
+    flex-shrink: 0; /* Prevents the label from shrinking */
+    margin-right: 10px; /* Space between label and slider */
+}
+
+.slider {
+    flex-grow: 1; /* Slider takes up remaining space */
+}

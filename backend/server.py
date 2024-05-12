@@ -114,6 +114,24 @@ def historical_data(ticker):
     # Convert data to a dictionary and return JSON
     return jsonify(data.reset_index().to_dict(orient='records'))
 
+@app.route('/api/update-weights', methods=['POST'])
+def update_weights():
+    updated_assets = request.json
+    logging.debug("Received weights update request: %s", updated_assets)
+    
+    try:
+        # Assume Portfolio class has an `update_weights` method or similar
+        if new_portfolio.update_weights(updated_assets):
+            logging.info("Weights updated successfully.")
+            return jsonify({'message': 'Weights updated successfully'}), 200
+        else:
+            logging.warning("Failed to update weights.")
+            return jsonify({'error': 'Failed to update weights'}), 400
+    except Exception as e:
+        logging.error("Error updating weights: %s", str(e))
+        return jsonify({'error': 'Internal Server Error'}), 500
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -62,6 +62,19 @@ class Portfolio:
             equal_weight = 1 / len(self.assets)
             for asset in self.assets:
                 asset['weight'] = equal_weight
+
+    def update_weights(self, updated_assets):
+        try:
+            for update in updated_assets:
+                # Find the asset and update its weight
+                for asset in self.assets:
+                    if asset['symbol'] == update['symbol']:
+                        asset['weight'] = update['weight']
+                        break
+            return True
+        except Exception as e:
+            print("Failed to update asset weights: %s", str(e))
+            return False
     
     def _retrieve_historical_data(self):
         """Retrieve historical stock prices for the portfolio assets."""

@@ -55,8 +55,22 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    const updateAssetWeights = async (updatedWeights) => {
+        try {
+            const updateResponse = await axios.post('/api/update-weights', updatedWeights);
+            if (updateResponse.status === 200) {
+                console.log("Weights updated successfully");
+                fetchAssets();  // Refresh the assets to reflect the updated weights
+            } else {
+                throw new Error('Failed to update weights');
+            }
+        } catch (error) {
+            console.error("Failed to update asset weights: ", error);
+        }
+    };
+
     return (
-        <PortfolioContext.Provider value={{ portfolioAssets, addAsset, removeAsset }}>
+        <PortfolioContext.Provider value={{ portfolioAssets, addAsset, removeAsset, fetchAssets, updateAssetWeights }}>
             {children}
         </PortfolioContext.Provider>
     );
