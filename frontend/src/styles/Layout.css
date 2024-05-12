@@ -34,6 +34,7 @@ html {
     height: 100%; /* Optional: Takes full height if needed */
     flex-direction: row; /* Arranges children vertically */
     overflow: auto;
+    padding-bottom: 50px;
 }
 
 .header {
@@ -63,7 +64,7 @@ html {
     width: 45%; /* Only take up half the screen */
     min-width: 420px;
     padding-left: 20px; /* Add padding for spacing from the screen edge */
-    padding-bottom: 50px;
+    padding-bottom: 70px;
     background-color: var(--secondary-background-color); /* Darker background for the builder area */
     color: var(--foreground-color); /* Main text color */
     overflow: auto;
@@ -79,7 +80,7 @@ html {
     border: 1px solid var(--border-color); /* Subtle borders for distinction */
 }
 
-.optimization-tools {
+.customization-tools {
     background-color: var(--secondary-background-color); /* Matching the theme */
     width: 55%; /* Adjust based on available space */
     min-width: 515px;
@@ -87,7 +88,7 @@ html {
     flex-direction: column;
     overflow: auto; /* Allows scrolling within the section */
     border-left: 1px solid var(--border-color); /* Adds a subtle border on the left */
-    padding-bottom: 50px;
+    padding-bottom: 70px;
 }
 
 .tab-toolbar {

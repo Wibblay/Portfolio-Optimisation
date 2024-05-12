@@ -69,8 +69,28 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    const optimizePortfolio = async (params) => {
+        try {
+            const optimizeResponse = await axios.post('/api/optimize-portfolio', params);
+            if (optimizeResponse.status === 200) {
+                console.log("Optimization successful")
+            } else {
+                console.error('Optimization failed:', optimizeResponse.data.error);
+            }
+        } catch (error) {
+            console.error('Error during optimization:', error);
+        }
+    };
+
     return (
-        <PortfolioContext.Provider value={{ portfolioAssets, addAsset, removeAsset, fetchAssets, updateAssetWeights }}>
+        <PortfolioContext.Provider value={{ 
+            portfolioAssets, 
+            addAsset, 
+            removeAsset, 
+            fetchAssets, 
+            updateAssetWeights,
+            optimizePortfolio 
+        }}>
             {children}
         </PortfolioContext.Provider>
     );

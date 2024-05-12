@@ -1,0 +1,35 @@
+/* PortfolioSummary.css */
+.portfolio-summary {
+    background-color: var(--secondary-background-color);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: auto;
+    box-sizing: border-box;
+    padding-bottom: 70px;
+}
+
+.summary-top {
+    margin-bottom: 20px;
+}
+
+.statistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.statistic {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    margin: 10px;
+    text-align: center;
+}
+
+.summary-bottom {
+    width: 100%;
+}

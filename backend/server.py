@@ -131,6 +131,23 @@ def update_weights():
         logging.error("Error updating weights: %s", str(e))
         return jsonify({'error': 'Internal Server Error'}), 500
 
+@app.route('/api/optimize-portfolio', methods=['POST'])
+def optimize_portfolio():
+    logging.debug("Request received for portfolio optimization")
+    data = request.json
+    start_date = data.get('start_date')
+    desired_return = data.get('desired_return', None)  # Optional desired return
+
+    try:
+        if desired_return is not None:
+            desired_return = float(desired_return)
+
+        # Perform the optimization
+        new_portfolio.mean_variance_optimization(start_date=start_date, target_return=desired_return)
+        return jsonify({'message': 'Portfolio optimization completed successfully'}), 200
+    except Exception as e:
+        logging.error("Error during optimization: %s", e)
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':

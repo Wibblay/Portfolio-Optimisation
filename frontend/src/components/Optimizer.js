@@ -19,14 +19,18 @@ function assetReducer(state, action) {
           ? { ...asset, weight: action.payload.newWeight }
           : asset
       );
+    case 'SET_OPTIMIZED_WEIGHTS':
+      return action.payload; 
     default:
       return state;
   }
 }
 
 const Optimizer = () => {
-    const { portfolioAssets, fetchAssets, updateAssetWeights } = useContext(PortfolioContext);
+    const { portfolioAssets, fetchAssets, updateAssetWeights, optimizePortfolio } = useContext(PortfolioContext);
     const [assets, dispatch] = useReducer(assetReducer, []);
+    const [startDate, setStartDate] = useState('');
+    const [desiredReturn, setDesiredReturn] = useState('');
 
     // Initialize or update assets when portfolioAssets changes
     useEffect(() => {
@@ -50,6 +54,15 @@ const Optimizer = () => {
     const handleReset = async () => {
         console.log("Resetting assets to previous values")
         await fetchAssets();  // Re-fetch assets from the backend to reset state
+    };
+
+    const handleOptimizeClick = async () => {
+        try {
+            await optimizePortfolio({ startDate, desiredReturn });
+            await fetchAssets();  // Fetch the updated weights after optimization
+        } catch (error) {
+            console.error("Optimization failed: ", error);
+        }
     };
 
     return (
@@ -79,7 +92,9 @@ const Optimizer = () => {
             </div>
             <div className="optimization-tools">
                 <h3>Optimization Tools</h3>
-                {/* Placeholder for future optimization tools */}
+                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                <input type="number" placeholder="Desired return (%)" value={desiredReturn} onChange={e => setDesiredReturn(e.target.value)} />
+                <button onClick={handleOptimizeClick}>Optimize Portfolio</button>
             </div>
         </div>
     );

@@ -20,7 +20,7 @@ function App() {
                     <TickerForm />
                     <PortfolioDisplay />
                 </div>
-                <div className="optimization-tools">
+                <div className="customization-tools">
                     <div className="tab-toolbar">
                         <button onClick={() => setActiveTab('portfolio-summary')} 
                                 className={activeTab === 'portfolio-summary' ? 'active' : ''}>

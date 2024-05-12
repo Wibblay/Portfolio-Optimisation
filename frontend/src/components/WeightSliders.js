@@ -2,50 +2,48 @@ import React, { useState, useEffect, useMemo } from 'react';
 import './WeightSliders.css';
 
 const WeightSliders = ({ assets, onWeightChange }) => {
-    const [weights, setWeights] = useState({});
+    // Use useMemo to calculate initial weights directly from assets
+    const initialWeights = useMemo(() => assets.reduce((acc, asset) => ({
+        ...acc,
+        [asset.symbol]: asset.weight * 100  // Convert decimal weights to percentage for slider representation
+    }), {}), [assets]);
 
-    // Memoize initial weights to prevent unnecessary reinitializations
-    const initialWeights = useMemo(() => {
-        return assets.reduce((acc, asset) => ({
-            ...acc,
-            [asset.symbol]: asset.weight * 100  // Convert to percentage for slider representation
-        }), {});
-    }, [assets]);
+    // State to hold the slider weights
+    const [weights, setWeights] = useState(initialWeights);
 
+    // Update weights whenever initialWeights changes
     useEffect(() => {
-        // Only update weights if they are empty or if asset count changes
-        if (Object.keys(weights).length === 0 || Object.keys(weights).length !== assets.length) {
-            setWeights(initialWeights);
-        }
-    }, [initialWeights, assets.length]); // Depend on memoized weights and asset count
+        setWeights(initialWeights);
+    }, [initialWeights]);
 
+    // Handle slider changes
     const handleSliderChange = (symbol, newPercentage) => {
-        const newWeight = newPercentage / 100;
+        const newWeight = newPercentage / 100;  // Convert percentage back to decimal for consistent data handling
 
-        // Update parent component state immediately
+        // Update the parent component state
         onWeightChange(symbol, newWeight);
 
         // Update local state to immediately reflect new weight
-        const newWeights = {
+        const updatedWeights = {
             ...weights,
             [symbol]: newPercentage
         };
 
-        // Recalculate and distribute remaining weight proportionally among other assets
+        // Recalculate the remaining weights to ensure they sum up to 100%
         const totalWeightExcludingCurrent = assets.reduce(
-            (total, asset) => total + (asset.symbol === symbol ? 0 : newWeights[asset.symbol] / 100),
+            (total, asset) => total + (asset.symbol === symbol ? 0 : updatedWeights[asset.symbol] / 100),
             0
         );
         if (totalWeightExcludingCurrent > 0) {
             assets.forEach(asset => {
                 if (asset.symbol !== symbol) {
-                    newWeights[asset.symbol] = ((newWeights[asset.symbol] / 100) / totalWeightExcludingCurrent) * (1 - newWeight) * 100;
-                    onWeightChange(asset.symbol, newWeights[asset.symbol] / 100);
+                    updatedWeights[asset.symbol] = ((updatedWeights[asset.symbol] / 100) / totalWeightExcludingCurrent) * (1 - newWeight) * 100;
+                    onWeightChange(asset.symbol, updatedWeights[asset.symbol] / 100);
                 }
             });
         }
 
-        setWeights(newWeights);
+        setWeights(updatedWeights);
     };
 
     if (assets.length === 0) {

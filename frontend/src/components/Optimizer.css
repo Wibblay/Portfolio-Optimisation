@@ -7,6 +7,7 @@
     padding: 20px;
     overflow: auto;
     box-sizing: border-box;
+    padding-bottom: 70px;
 }
 
 .weight-display {

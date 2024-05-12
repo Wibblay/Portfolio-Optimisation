@@ -1,9 +1,11 @@
 # backend/src/portfolio.py
+import numpy as np
 from datetime import datetime, timedelta
 from scipy.optimize import minimize
+from src.data_fetcher import fetch_historical_data
 
 class Portfolio:
-    def __init__(self, assets=None, start_date=None, end_date=None, initial_weights=None):
+    def __init__(self, assets=None):
         """
         Initialize a portfolio with given assets and weights.
         
@@ -17,27 +19,6 @@ class Portfolio:
             self.assets = []
         else:
             self.assets = assets
-        
-        if start_date is None:
-            self.start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
-        else:
-            self.start_date = start_date
-        
-        if end_date is None:
-            self.end_date = datetime.now().strftime('%Y-%m-%d')
-        else:
-            self.end_date = end_date
-        
-        if initial_weights is None:
-            self.weights = {}
-        else:
-            self.weights = initial_weights
-        
-        # Initialize other attributes to None
-        self.historical_data = None
-        self.daily_returns = None
-        self.portfolio_value = None
-        self.statistics = None
 
     def add_asset(self, asset):
         """
@@ -75,80 +56,51 @@ class Portfolio:
         except Exception as e:
             print("Failed to update asset weights: %s", str(e))
             return False
-    
-    def _retrieve_historical_data(self):
-        """Retrieve historical stock prices for the portfolio assets."""
+
+    def mean_variance_optimization(self, start_date, target_return=None):
+        """ Perform mean-variance optimization using historical returns. """
+        end_date = datetime.now().strftime('%Y-%m-%d')  # Current date as end date
         tickers = [asset['symbol'] for asset in self.assets]
-        data = yf.download(tickers, start=self.start_date, end=self.end_date)
-        data.dropna(inplace=True)
-        return data
-    
-    def _calculate_daily_returns(self):
-        """Calculate daily returns for each asset."""
-        # Calculate daily percentage change in prices
-        daily_returns = self.historical_data['Adj Close'].pct_change()
+        weights = np.array([asset['weight'] for asset in self.assets])
 
-        # Drop any NaN values
-        self.historical_data.dropna(inplace=True)
+        # Fetch historical data
+        historical_data = fetch_historical_data(tickers, start_date, end_date)
+        if historical_data.empty:
+            raise ValueError("No historical data available for optimization.")
         
-        return daily_returns
-    
-    def _calculate_portfolio_value(self):
-        """Calculate the portfolio value over time based on historical data and weights."""
-        # Calculate daily portfolio values
-        daily_portfolio_values = (self.historical_data['Adj Close'] * pd.Series(self.weights)).sum(axis=1)
-        
-        return daily_portfolio_values
-    
-    def _calculate_statistics(self):
-        """Calculate portfolio statistics such as total return, volatility, and Sharpe ratio."""
-        # Calculate total return
-        total_return = (self.portfolio_value.iloc[-1] / self.portfolio_value.iloc[0]) - 1
-        
-        # Calculate annualized volatility (standard deviation of daily returns)
-        annualized_volatility = self.daily_returns.std() * np.sqrt(252)
-        
-        # Calculate annualized Sharpe ratio
-        risk_free_rate = 0.02  # Example risk-free rate
-        excess_returns = self.daily_returns - risk_free_rate / 252
-        annualized_sharpe_ratio = excess_returns.mean() / excess_returns.std() * np.sqrt(252)
-        
-        statistics = {
-            "Total Return": total_return,
-            "Annualized Volatility": annualized_volatility,
-            "Annualized Sharpe Ratio": annualized_sharpe_ratio
-        }
-        
-        return statistics
+        try:
+            close_prices = historical_data['Close']
+        except KeyError:
+            raise ValueError("Close prices not available in the historical data.")
 
-    def mean_variance_optimization(self, target_return=None):
-        """Perform mean-variance optimization to find optimal portfolio weights."""
+        # Calculate daily returns
+        daily_returns = close_prices.pct_change().dropna()
+
         # Define objective function
         def objective(weights):
-            portfolio_return = (self.daily_returns * weights).sum(axis=1).mean() * 252
-            portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(self.daily_returns.cov() * 252, weights)))
+            portfolio_return = np.sum(daily_returns.mean() * weights) * 252
+            portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(daily_returns.cov() * 252, weights)))
             if target_return is None:
-                return -portfolio_return / portfolio_volatility  # Minimize negative Sharpe ratio
+                return -portfolio_return / portfolio_volatility  # Maximize Sharpe Ratio
             else:
                 return (portfolio_return - target_return) ** 2  # Minimize deviation from target return
-        
-        # Define constraints
+
+        # Constraints to ensure all weights sum to 1
         constraints = ({'type': 'eq', 'fun': lambda weights: np.sum(weights) - 1})
         
-        # Define bounds (optional)
-        bounds = [(0, 1) for _ in range(len(self.tickers))]  # Bounds for weights between 0 and 1
+        # Bounds to ensure weights are between 0 and 1
+        bounds = [(0, 1) for _ in tickers]
         
-        # Initial guess (optional)
-        if self.weights is not None:
-            initial_guess = list(self.weights.values())
-        else:
-            initial_guess = [1/len(self.tickers) for _ in range(len(self.tickers))]
-        
+        # Initial guess
+        initial_guess = weights if np.sum(weights) == 1 else np.array([1/len(tickers) for _ in tickers])
+
         # Perform optimization
-        result = minimize(objective, initial_guess, method='SLSQP', constraints=constraints, bounds=bounds)
-        
+        result = minimize(objective, initial_guess, method='SLSQP', bounds=bounds, constraints=constraints)
+
         if result.success:
-            optimal_weights = {ticker: weight for ticker, weight in zip(self.tickers, result.x)}
-            return optimal_weights
+            # Update portfolio's assets with optimized weights
+            for asset, weight in zip(self.assets, result.x):
+                asset['weight'] = weight
+            print("Portfolio weights updated with optimized values.")
         else:
-            raise ValueError("Optimization failed.")
+            raise ValueError("Optimization failed: " + result.message)
