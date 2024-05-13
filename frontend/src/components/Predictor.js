@@ -3,7 +3,7 @@ import React from 'react';
 
 const Predictor = () => {
     return (
-        <div>
+        <div className="predictor-section">
             <h2>Prediction Environment</h2>
             {/* Prediction logic and UI here */}
         </div>

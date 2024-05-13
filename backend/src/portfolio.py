@@ -62,6 +62,26 @@ class Portfolio:
         except Exception as e:
             print("Failed to update asset weights: %s", str(e))
             return False
+        
+    def isolate_close_prices(self, historical_data):
+        if historical_data.empty:
+            raise ValueError("No historical data available for optimization.")
+        
+        try:
+            close_prices = historical_data['Close']
+            return close_prices
+        except KeyError:
+            raise ValueError("Close prices not available in the historical data.")
+        
+    def calculate_daily_returns(self, close_prices):
+        return close_prices.pct_change().dropna()
+    
+    def calculate_portfolio_returns(self, daily_returns):
+        if len(self.assets) > 1:
+            weights = np.array([asset['weight'] for asset in self.assets])
+            return (daily_returns * weights).sum(axis=1)
+        else:
+            return daily_returns 
 
     def mean_variance_optimization(self, start_date, target_return=None):
         """ Perform mean-variance optimization using historical returns. """
@@ -71,16 +91,8 @@ class Portfolio:
 
         # Fetch historical data
         historical_data = fetch_historical_data(tickers, start_date, end_date)
-        if historical_data.empty:
-            raise ValueError("No historical data available for optimization.")
-        
-        try:
-            close_prices = historical_data['Close']
-        except KeyError:
-            raise ValueError("Close prices not available in the historical data.")
-
-        # Calculate daily returns
-        daily_returns = close_prices.pct_change().dropna()
+        close_prices = self.isolate_close_prices(historical_data)
+        daily_returns = self.calculate_daily_returns(close_prices)
 
         # Define objective function
         def objective(weights):
@@ -123,19 +135,10 @@ class Portfolio:
         start_date = (datetime.now() - timedelta(days=365 * 3)).strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
         historical_data = fetch_historical_data(tickers, start_date, end_date)
-
-        if historical_data.empty:
-            raise ValueError("No historical data available for calculations.")
+        close_prices = self.isolate_close_prices(historical_data)
         
         # Fetch exchange rates
         exchange_rates = fetch_exchange_rates(currencies)
-        print(historical_data)
-
-        try:
-            close_prices = historical_data['Close']
-        except KeyError:
-            raise ValueError("Close prices not available in the historical data.")
-        print(close_prices)
         
         # Normalize historical data to USD
         if len(self.assets) > 1:
@@ -150,20 +153,15 @@ class Portfolio:
                 close_prices *= (1 / exchange_rate)
 
         # Calculate daily returns
-        daily_returns = close_prices.pct_change().dropna()
-        if len(tickers) > 1:
-            portfolio_returns = (daily_returns * weights).sum(axis=1)
-        else:
-            portfolio_returns = daily_returns
+        daily_returns = self.calculate_daily_returns(close_prices)
+        portfolio_returns = self.calculate_portfolio_returns(daily_returns)
 
         if len(self.assets) > 1:
             total_portfolio_values = close_prices.to_numpy().dot(weights)
         else:
             total_portfolio_values = close_prices.to_numpy()
-        print(total_portfolio_values)
         initial_value = total_portfolio_values[0]
         final_value = total_portfolio_values[-1]
-        print(final_value)
         CAGR = ((final_value / initial_value) ** (1 / 3) - 1) * 100
 
         total_return = ((portfolio_returns + 1).prod() - 1) * 100

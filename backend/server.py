@@ -25,22 +25,21 @@ new_portfolio = Portfolio()
 ##INIT ROUTES##
 @app.route('/')
 def index():
-    logging.debug("Request received for index route")
     return send_from_directory(os.path.join('..', 'frontend', 'build'), 'index.html')
 
 @app.route('/static/js/<path:filename>')
 def static_files_js(filename):
-    logging.debug("Request received for js static files route:", filename) 
+    logging.debug("Request received for js static files route") 
     return send_from_directory(os.path.join('..', 'frontend', 'build', 'static', 'js'), filename)
 
 @app.route('/static/css/<path:filename>')
 def static_files_css(filename):
-    logging.debug("Request received for css static files route:", filename) 
+    logging.debug("Request received for css static files route") 
     return send_from_directory(os.path.join('..', 'frontend', 'build', 'static', 'css'), filename)
 
 @app.route('/<path:filename>')
 def other_files(filename):
-    logging.debug("Request received for other files route:", filename) 
+    logging.debug("Request received for other files route") 
     return send_from_directory(os.path.join('..', 'frontend', 'build'), filename)
 
 ##API ROUTES##
@@ -160,6 +159,27 @@ def get_portfolio_statistics():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': 'Internal Server Error'}), 500
+    
+@app.route('/api/portfolio-returns/<start_date>')
+def fetch_portfolio_returns(start_date):
+    logging.debug("Start date passed: %s", start_date)
+    end_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    
+    tickers = [asset['symbol'] for asset in new_portfolio.assets]
+    logging.debug("Dates used: %s, %s", start_date, end_date)
+    data = fetch_historical_data(tickers, start_date, end_date)
+    try:
+        close_prices = new_portfolio.isolate_close_prices(data)
+        daily_returns = new_portfolio.calculate_daily_returns(close_prices)
+        portfolio_returns = new_portfolio.calculate_portfolio_returns(daily_returns)
+        portfolio_returns.index = portfolio_returns.index.strftime('%Y-%m-%d')
+        if len(tickers) > 1:
+            portfolio_returns.rename('Close', inplace=True)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+
+    print(portfolio_returns.reset_index().to_dict(orient='records'))
+    return jsonify(portfolio_returns.reset_index().to_dict(orient='records'))
 
 
 if __name__ == '__main__':
