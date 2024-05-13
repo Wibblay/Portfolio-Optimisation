@@ -1,23 +1,29 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import {
+    fetchAssetsApi,
+    addAssetApi,
+    removeAssetApi,
+    updateAssetWeightsApi,
+    optimizePortfolioApi
+} from './Api';
 
 export const PortfolioContext = createContext();
 
 export const PortfolioProvider = ({ children }) => {
     const [portfolioAssets, setPortfolioAssets] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const fetchAssets = async () => {
+        setLoading(true);
         try {
-            const response = await axios.get('/api/portfolio-tickers');
-            console.log("Fetch reponse: ", response)
-            if (response.status === 200 && Array.isArray(response.data.assets)) {
-                setPortfolioAssets(response.data.assets);
-            } else {
-                throw new Error('Invalid format for portfolio assets');
-            }
+            const assets = await fetchAssetsApi();
+            setPortfolioAssets(assets);
         } catch (error) {
+            setError('Failed to fetch assets');
             console.error("Failed to fetch assets: ", error);
-            setPortfolioAssets([]); // Optionally, reset on error or maintain old state
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -27,15 +33,19 @@ export const PortfolioProvider = ({ children }) => {
 
     const addAsset = async (asset) => {
         if (!portfolioAssets.some(a => a.symbol === asset.symbol)) {
+            setLoading(true);
             try {
-                const addResponse = await axios.post('/api/add-tickers', asset);
-                if (addResponse.status === 200) {
-                    fetchAssets(); // Refresh after a successful add
+                const status = await addAssetApi(asset);
+                if (status === 200) {
+                    fetchAssets();
                 } else {
-                    throw new Error('Failed to add asset');
+                    setError('Failed to add asset');
                 }
             } catch (error) {
+                setError('Failed to add asset');
                 console.error("Failed to add asset: ", error);
+            } finally {
+                setLoading(false);
             }
         } else {
             console.log("Asset already in the portfolio: ", asset.symbol);
@@ -43,53 +53,67 @@ export const PortfolioProvider = ({ children }) => {
     };
 
     const removeAsset = async (symbol) => {
+        setLoading(true);
         try {
-            const removeResponse = await axios.delete(`/api/remove-ticker/${symbol}`);
-            if (removeResponse.status === 200) {
-                fetchAssets(); // Refresh after a successful remove
+            const status = await removeAssetApi(symbol);
+            if (status === 200) {
+                fetchAssets();
             } else {
-                throw new Error('Failed to remove asset');
+                setError('Failed to remove asset');
             }
         } catch (error) {
+            setError('Failed to remove asset');
             console.error("Failed to remove asset: ", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const updateAssetWeights = async (updatedWeights) => {
+        setLoading(true);
         try {
-            const updateResponse = await axios.post('/api/update-weights', updatedWeights);
-            if (updateResponse.status === 200) {
-                console.log("Weights updated successfully");
-                fetchAssets();  // Refresh the assets to reflect the updated weights
+            const status = await updateAssetWeightsApi(updatedWeights);
+            if (status === 200) {
+                fetchAssets();
             } else {
-                throw new Error('Failed to update weights');
+                setError('Failed to update weights');
             }
         } catch (error) {
+            setError('Failed to update weights');
             console.error("Failed to update asset weights: ", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const optimizePortfolio = async (params) => {
+        setLoading(true);
         try {
-            const optimizeResponse = await axios.post('/api/optimize-portfolio', params);
-            if (optimizeResponse.status === 200) {
-                console.log("Optimization successful")
+            const status = await optimizePortfolioApi(params);
+            if (status === 200) {
+                console.log("Optimization successful");
             } else {
-                console.error('Optimization failed:', optimizeResponse.data.error);
+                setError('Optimization failed');
+                console.error('Optimization failed');
             }
         } catch (error) {
+            setError('Error during optimization');
             console.error('Error during optimization:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <PortfolioContext.Provider value={{ 
-            portfolioAssets, 
-            addAsset, 
-            removeAsset, 
-            fetchAssets, 
+        <PortfolioContext.Provider value={{
+            portfolioAssets,
+            addAsset,
+            removeAsset,
+            fetchAssets,
             updateAssetWeights,
-            optimizePortfolio 
+            optimizePortfolio,
+            loading,
+            error
         }}>
             {children}
         </PortfolioContext.Provider>
@@ -97,4 +121,3 @@ export const PortfolioProvider = ({ children }) => {
 };
 
 export const usePortfolio = () => useContext(PortfolioContext);
-
