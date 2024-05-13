@@ -181,6 +181,11 @@ def fetch_portfolio_returns(start_date):
     print(portfolio_returns.reset_index().to_dict(orient='records'))
     return jsonify(portfolio_returns.reset_index().to_dict(orient='records'))
 
+@app.route('/api/monte_carlo_simulation', methods=['GET'])
+def monte_carlo_simulation():
+    simulation_results = new_portfolio.monte_carlo_simulation(n_simulations=1000, n_days=252)
+    return jsonify(simulation_results)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

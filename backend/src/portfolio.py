@@ -3,8 +3,6 @@ import numpy as np
 from datetime import datetime, timedelta
 import yfinance as yf
 from scipy.optimize import minimize
-import pymc3 as pm
-import arviz as az
 from src.data_fetcher import fetch_historical_data
 from src.fetch_exchange_rates import fetch_exchange_rates
 
@@ -184,3 +182,32 @@ class Portfolio:
         print(statistics)
 
         return statistics
+    
+    def monte_carlo_simulation(self, n_simulations=1000, n_days=252):
+        if not self.assets:
+            return {}
+
+        tickers = [asset['symbol'] for asset in self.assets]
+        weights = np.array([asset['weight'] for asset in self.assets])
+
+        start_date = (datetime.now() - timedelta(days=365 * 3)).strftime('%Y-%m-%d')
+        end_date = datetime.now().strftime('%Y-%m-%d')
+        historical_data = fetch_historical_data(tickers, start_date, end_date)
+        close_prices = self.isolate_close_prices(historical_data)
+
+        daily_returns = self.calculate_daily_returns(close_prices)
+        mean_returns = daily_returns.mean()
+        cov_matrix = daily_returns.cov()
+
+        usd_close_prices = self.close_price_to_usd(close_prices)
+
+        simulation_results = np.zeros((n_days, n_simulations))
+        
+        for sim in range(n_simulations):
+            simulated_prices = usd_close_prices.iloc[-1].values
+            for day in range(n_days):
+                simulated_returns = np.random.multivariate_normal(mean_returns, cov_matrix)
+                simulated_prices = simulated_prices * (1 + simulated_returns)
+                simulation_results[day, sim] = np.dot(simulated_prices, weights)
+
+        return simulation_results.tolist()
