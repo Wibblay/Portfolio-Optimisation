@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { PortfolioProvider } from './hooks/PortfolioContext';
 import TickerForm from './components/TickerForm';
-import PortfolioDisplay from './components/PortfolioDisplay';
+import PortfolioBuilder from './components/PortfolioBuilder';
 import Optimizer from './components/Optimizer';
 import Predictor from './components/Predictor';
 import PortfolioSummary from './components/PortfolioSummary';
@@ -31,7 +31,7 @@ function App() {
             <div className="main-container">
                 <div className="portfolio-builder">
                     <TickerForm />
-                    <PortfolioDisplay />
+                    <PortfolioBuilder />
                 </div>
                 <div className="customization-tools">
                     <div className="tab-toolbar">

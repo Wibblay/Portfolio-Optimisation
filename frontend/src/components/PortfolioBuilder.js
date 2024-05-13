@@ -1,14 +1,14 @@
 // PortfolioDisplay.js
 import React, { useContext, useEffect, useState } from 'react';
-import { PortfolioContext } from '../hooks/PortfolioContext';
+import { PortfolioContext } from '../hooks/PortfolioContext.js';
 import PriceChart from './PriceChart.js';
-import './PortfolioDisplay.css';
+import './PortfolioBuilder.css';
 
-const PortfolioDisplay = () => {
+const PortfolioBuilder = () => {
     const { portfolioAssets, removeAsset } = useContext(PortfolioContext);
 
     return (
-        <div className="portfolio-display">
+        <div className="portfolio-builder">
             <h3>Current Portfolio</h3>
             {portfolioAssets.map((asset, index) => (
                 <div key={index} className="asset-container">
@@ -39,7 +39,7 @@ const PortfolioDisplay = () => {
     
 };
 
-export default PortfolioDisplay;
+export default PortfolioBuilder;
 
 const AssetPriceChart = ({ symbol }) => {
     const [data, setData] = useState([]);
