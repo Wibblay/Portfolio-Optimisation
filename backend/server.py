@@ -67,7 +67,8 @@ def symbol_search():
 @app.route('/api/portfolio-tickers', methods=['GET'])
 def get_portfolio_tickers():
     logging.debug("Portfolio ticker request received")
-    assets = [{'symbol': asset['symbol'], 'name': asset['name'], 'weight':asset['weight']} for asset in new_portfolio.assets]
+    assets = [{'symbol': asset['symbol'], 'name': asset['name'], 'weight':asset['weight'], 'sector':asset['sector'],
+               'industry':asset['industry'], 'currency':asset['currency']} for asset in new_portfolio.assets]
     logging.debug("Current assets:, %s", assets)
     return jsonify({'assets': assets})
 
@@ -148,6 +149,17 @@ def optimize_portfolio():
     except Exception as e:
         logging.error("Error during optimization: %s", e)
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/portfolio-statistics', methods=['GET'])
+def get_portfolio_statistics():
+    try:
+        stats = new_portfolio.calculate_statistics()
+        print(stats)
+        return jsonify(stats), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 
 if __name__ == '__main__':

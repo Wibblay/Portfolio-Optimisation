@@ -15,9 +15,12 @@ const PortfolioDisplay = () => {
                     <div className="asset-details">
                         <p><strong>Ticker:</strong> {asset.symbol}</p>
                         <p><strong>Name:</strong> {asset.name}</p>
+                        <p><strong>Sector:</strong> {asset.sector}</p>
+                        <p><strong>Industry:</strong> {asset.industry}</p>
                     </div>
                     <div className="chart-and-remove">
                         <div className="remove-button-container">
+                            <p><strong>Recent Closing Prices in {asset.currency}</strong></p>
                             <button 
                                 onClick={() => removeAsset(asset.symbol)}
                                 className="remove-button"

@@ -43,6 +43,11 @@
     width: 66%; /* Explicitly setting the width to 66% of the parent container */
 }
 
+.remove-button-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .remove-button {
     padding: 5px 10px;
     font-size: 16px;
