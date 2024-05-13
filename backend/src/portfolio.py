@@ -3,6 +3,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import yfinance as yf
 from scipy.optimize import minimize
+import pymc3 as pm
+import arviz as az
 from src.data_fetcher import fetch_historical_data
 from src.fetch_exchange_rates import fetch_exchange_rates
 
@@ -82,6 +84,23 @@ class Portfolio:
             return (daily_returns * weights).sum(axis=1)
         else:
             return daily_returns 
+        
+    def close_price_to_usd(self, close_prices):
+
+        # Fetch exchange rates
+        currencies = [asset['currency'] for asset in self.assets]
+        exchange_rates = fetch_exchange_rates(currencies)
+        
+        # Normalize historical data to USD
+        if len(self.assets) > 1:
+            for asset in self.assets:
+                exchange_rate = exchange_rates.get(asset['currency'], 1)  # Default to 1 if no rate found
+                close_prices[asset['symbol']] *= (1 / exchange_rate)
+        else:
+            if currencies[0] != 'USD':
+                exchange_rate = exchange_rates.get(currencies[0], 1)  # Default to 1 if no rate found
+                close_prices *= (1 / exchange_rate)
+        return close_prices
 
     def mean_variance_optimization(self, start_date, target_return=None):
         """ Perform mean-variance optimization using historical returns. """
@@ -129,7 +148,6 @@ class Portfolio:
 
         tickers = [asset['symbol'] for asset in self.assets]
         weights = np.array([asset['weight'] for asset in self.assets])
-        currencies = [asset['currency'] for asset in self.assets]
 
         # Assuming you have a function to fetch historical prices
         start_date = (datetime.now() - timedelta(days=365 * 3)).strftime('%Y-%m-%d')
@@ -137,29 +155,16 @@ class Portfolio:
         historical_data = fetch_historical_data(tickers, start_date, end_date)
         close_prices = self.isolate_close_prices(historical_data)
         
-        # Fetch exchange rates
-        exchange_rates = fetch_exchange_rates(currencies)
-        
-        # Normalize historical data to USD
-        if len(self.assets) > 1:
-            for asset in self.assets:
-                exchange_rate = exchange_rates.get(asset['currency'], 1)  # Default to 1 if no rate found
-                print("Exchange rate:, %s", exchange_rate)
-                close_prices[asset['symbol']] *= (1 / exchange_rate)
-        else:
-            if currencies[0] != 'USD':
-                exchange_rate = exchange_rates.get(currencies[0], 1)  # Default to 1 if no rate found
-                print("Exchange rate:, %s", exchange_rate)
-                close_prices *= (1 / exchange_rate)
+        usd_close_prices = self.close_price_to_usd(close_prices)
 
         # Calculate daily returns
         daily_returns = self.calculate_daily_returns(close_prices)
         portfolio_returns = self.calculate_portfolio_returns(daily_returns)
 
         if len(self.assets) > 1:
-            total_portfolio_values = close_prices.to_numpy().dot(weights)
+            total_portfolio_values = usd_close_prices.to_numpy().dot(weights)
         else:
-            total_portfolio_values = close_prices.to_numpy()
+            total_portfolio_values = usd_close_prices.to_numpy()
         initial_value = total_portfolio_values[0]
         final_value = total_portfolio_values[-1]
         CAGR = ((final_value / initial_value) ** (1 / 3) - 1) * 100
