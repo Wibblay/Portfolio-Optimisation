@@ -1,7 +1,7 @@
 /* Summary.js */
 import React, { useContext, useState, useEffect } from 'react';
 import { PortfolioContext } from '../hooks/PortfolioContext.js';
-import './Summary.css';
+import '../styles/Summary.css';
 import PriceChart from './PriceChart.js';
 import axios from 'axios';
 

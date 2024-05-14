@@ -4,7 +4,7 @@ import { PortfolioContext } from '../hooks/PortfolioContext';
 import WeightPieChart from './WeightPieChart';
 import PortfolioTable from './PortfolioTable';
 import WeightSliders from './WeightSliders';
-import './Optimizer.css';
+import '../styles/Optimizer.css';
 
 /**
  * Reducer function to handle state updates for assets in a controlled manner.

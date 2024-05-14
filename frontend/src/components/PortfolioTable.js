@@ -1,6 +1,6 @@
 /* PortfolioTable.js */
 import React from 'react';
-import './PortfolioTable.css';  
+import '../styles/PortfolioTable.css';  
 
 /**
  * Component to display a table of portfolio assets and their weights.

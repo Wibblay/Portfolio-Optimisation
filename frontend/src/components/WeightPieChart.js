@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useResizeObserver } from '../hooks/ResizeObserver';
-import './WeightPieChart.css';
+import '../styles/WeightPieChart.css';
 
 /**
  * Component to render a responsive pie chart displaying portfolio asset weights.

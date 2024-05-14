@@ -2,7 +2,7 @@
 import React, { useState, useContext, useCallback } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
-import './TickerForm.css'; 
+import '../styles/TickerForm.css'; 
 import '../styles/AutosuggestTheme.css';
 import { PortfolioContext } from '../hooks/PortfolioContext';
 

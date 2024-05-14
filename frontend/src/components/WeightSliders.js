@@ -1,6 +1,6 @@
 /* WeightSliders.js */
 import React, { useState, useEffect, useMemo } from 'react';
-import './WeightSliders.css';
+import '../styles/WeightSliders.css';
 
 /**
  * Component to render sliders for adjusting portfolio asset weights.

@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { LineChart, AreaChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area } from 'recharts';
 import { useResizeObserver } from '../hooks/ResizeObserver';
 import { format } from 'date-fns';
-import './PriceChart.css';  
+import '../styles/PriceChart.css';  
 
 /**
  * Component to render a responsive price chart using Recharts.

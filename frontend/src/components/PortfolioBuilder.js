@@ -2,7 +2,7 @@
 import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { PortfolioContext } from '../hooks/PortfolioContext.js';
 import PriceChart from './PriceChart.js';
-import './PortfolioBuilder.css';
+import '../styles/PortfolioBuilder.css';
 
 /**
  * Component to display the current portfolio.

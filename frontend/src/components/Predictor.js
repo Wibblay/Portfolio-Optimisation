@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import * as d3 from 'd3';
-import './Predictor.css';
+import '../styles/Predictor.css';
 
 /**
  * Component to run a Monte Carlo simulation predicting the performance of the portfolio over one year.
