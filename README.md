@@ -41,25 +41,22 @@ The Portfolio Optimization Tool is a web application designed to help users mana
      ```
 
 3. **Backend Setup**:
-   - Navigate to the `backend` directory:
+   - Navigate to the main `Portfolio-Optimisation` directory:
      ```sh
-     cd backend
+     cd ..
      ```
-   - Create a virtual environment and activate it:
+   - Activate the virtual environment:
      ```sh
-     python3 -m venv venv
-     source venv/bin/activate
+     source venv/Scripts/activate
      ```
    - Install the dependencies:
      ```sh
      pip install -r requirements.txt
      ```
-   - Set up environment variables:
-     - Create a `.env` file in the `backend` directory and add your API keys:
-       ```sh
-       FINNHUB_API_KEY=your_finnhub_api_key
-       OPEN_RATES_API_KEY=your_open_exchange_rates_api_key
-       ```
+   - Navigate to the `backend` directory:
+     ```sh
+     cd backend
+     ```
    - Start the Flask server:
      ```sh
      flask run
