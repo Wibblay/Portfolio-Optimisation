@@ -1,11 +1,14 @@
-// PortfolioDisplay.js
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { PortfolioContext } from '../hooks/PortfolioContext.js';
 import PriceChart from './PriceChart.js';
 import './PortfolioBuilder.css';
 
 const PortfolioBuilder = () => {
     const { portfolioAssets, removeAsset } = useContext(PortfolioContext);
+
+    const handleRemove = useCallback((symbol) => {
+        removeAsset(symbol);
+    }, [removeAsset]);
 
     return (
         <div className="portfolio-builder">
@@ -22,13 +25,13 @@ const PortfolioBuilder = () => {
                         <div className="remove-button-container">
                             <p><strong>Recent Closing Prices in {asset.currency}</strong></p>
                             <button 
-                                onClick={() => removeAsset(asset.symbol)}
+                                onClick={() => handleRemove(asset.symbol)}
                                 className="remove-button"
                             >
                                 X
                             </button>
                         </div>
-                        <div className="price-chart-container">
+                        <div className="price-chart-container-container">
                             <AssetPriceChart symbol={asset.symbol} />
                         </div>
                     </div>

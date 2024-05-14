@@ -172,14 +172,17 @@ def fetch_portfolio_returns(start_date):
         close_prices = new_portfolio.isolate_close_prices(data)
         daily_returns = new_portfolio.calculate_daily_returns(close_prices)
         portfolio_returns = new_portfolio.calculate_portfolio_returns(daily_returns)
-        portfolio_returns.index = portfolio_returns.index.strftime('%Y-%m-%d')
+        returns_plus_one = portfolio_returns + 1
+        cumulative_product = returns_plus_one.cumprod()
+        portfolio_cumulative_returns = cumulative_product - 1
+        portfolio_cumulative_returns.index = portfolio_cumulative_returns.index.strftime('%Y-%m-%d')
         if len(tickers) > 1:
-            portfolio_returns.rename('Close', inplace=True)
+            portfolio_cumulative_returns.rename('Close', inplace=True)
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
 
-    print(portfolio_returns.reset_index().to_dict(orient='records'))
-    return jsonify(portfolio_returns.reset_index().to_dict(orient='records'))
+    print(portfolio_cumulative_returns.reset_index().to_dict(orient='records'))
+    return jsonify(portfolio_cumulative_returns.reset_index().to_dict(orient='records'))
 
 @app.route('/api/monte_carlo_simulation', methods=['GET'])
 def monte_carlo_simulation():

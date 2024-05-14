@@ -1,23 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 export function useResizeObserver(ref) {
     const [dimensions, setDimensions] = useState({ width: null, height: null });
 
     useEffect(() => {
         const observeTarget = ref.current;
+        if (!observeTarget) {
+            console.log("No observeTarget found", observeTarget);
+            return;
+        }
+
         const resizeObserver = new ResizeObserver(entries => {
-            // Assume only one entry is observed (the container itself)
             if (entries[0]) {
-                setDimensions({
-                    width: entries[0].contentRect.width,
-                    height: entries[0].contentRect.height
-                });
+                const { width, height } = entries[0].contentRect;
+                console.log("ResizeObserver: width:", width, "height:", height); // Debugging
+                setDimensions({ width, height });
             }
         });
 
-        if (observeTarget) {
-            resizeObserver.observe(observeTarget);
-        }
+        resizeObserver.observe(observeTarget);
 
         return () => {
             if (observeTarget) {
@@ -28,4 +29,3 @@ export function useResizeObserver(ref) {
 
     return dimensions;
 }
-

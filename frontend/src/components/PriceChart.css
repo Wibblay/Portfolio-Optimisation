@@ -1,4 +1,12 @@
 /* PriceChart.css */
+.price-chart-container {
+    width: 100%; /* Full width of its container to ensure it fills it */
+    height: 100%; /* Height can adjust based on the content or a fixed ratio */
+    overflow: hidden; /* Prevents any overflow from the chart elements */
+    background-color: var(--background-color); /* Ensuring it fits the dark theme background */
+    color: var(--foreground-color); /* Adjusting text and line colors to fit the dark theme */
+}
+
 .price-chart {
     width: 100%; /* Full width of its container to ensure it fills it */
     height: 100%; /* Height can adjust based on the content or a fixed ratio */

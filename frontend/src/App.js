@@ -5,7 +5,7 @@ import TickerForm from './components/TickerForm';
 import PortfolioBuilder from './components/PortfolioBuilder';
 import Optimizer from './components/Optimizer';
 import Predictor from './components/Predictor';
-import PortfolioSummary from './components/PortfolioSummary';
+import PortfolioSummary from './components/Summary';
 import './styles/Layout.css';
 
 /**
@@ -29,7 +29,7 @@ function App() {
                 <h1>Portfolio Optimization Tool</h1>
             </header>
             <div className="main-container">
-                <div className="portfolio-builder">
+                <div className="portfolio-builder-main">
                     <TickerForm />
                     <PortfolioBuilder />
                 </div>
