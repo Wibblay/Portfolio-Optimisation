@@ -7,14 +7,14 @@
     padding: 20px;
     overflow: auto;
     box-sizing: border-box;
-    padding-bottom: 80px;
+    padding-bottom: 70px;
 }
 
 .summary-top {
     margin-bottom: 20px;
 }
 
-.statistics {
+.summary-statistics {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -44,32 +44,37 @@
 
 .button-group {
     display: flex;
-    justify-content: flex-start;
 }
 
 .button-group button {
     margin-right: 10px;
     padding: 10px 20px;
-    border: 1px solid #ccc;
-    background-color: var(--button-background-color);
-    color: var(--button-text-color);
+    border: none;
+    background-color: var(--background-color);
+    color: var(--foreground-color);
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
-.button-group button.active,
+.button-group button.active {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
 .button-group button:hover {
-    background-color: var(--blue-accent-color); /* Use blue accent color */
-    color: white;
+    background-color: var(--hover-background-color);
+    color: var(--accent-color);
 }
 
 .date-input {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--foreground-color);
     border-radius: 4px;
-    font-size: 1rem;
 }
 
-h3 {
-    margin-top: 0;
+.returns-chart-container {
+    width: 100%;
+    height: 300px;
 }

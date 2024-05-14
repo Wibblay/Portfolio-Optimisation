@@ -11,8 +11,15 @@
   box-shadow: 0 2px 4px var(--box-shadow-color); /* Adds subtle shadow from the theme */
 }
 
+.ticker-form-label {
+  display: block;  /* Ensures the label is displayed as a block element */
+  margin-bottom: 10px;  /* Adds space between the label and the ticker form */
+  font-size: 14px;
+  color: var(--foreground-color);
+}
+
 /* Style for the input field */
-.ticker-input {
+.input {
   width: calc(100% - 40px); /* Adjusts width to account for padding */
   padding: 10px;
   font-size: 16px;
@@ -30,9 +37,13 @@
 }
 
 /* Style for focus on inputs to enhance usability */
-.ticker-input:focus {
+.input:focus {
   outline: none; /* Removes default focus outline */
   border-color: var(--accent-color); /* Highlight input with accent color on focus */
   box-shadow: 0 0 8px var(--accent-color); /* Adds a glow effect using the accent color */
 }
 
+.error-message {
+  margin-top: 10px;  /* Adds space between the input and the error message */
+  color: var(--error-color);  /* Sets the color for error messages */
+}

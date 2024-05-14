@@ -31,6 +31,7 @@ const Optimizer = () => {
   const [assets, dispatch] = useReducer(assetReducer, []);
   const [startDate, setStartDate] = useState('');
   const [desiredReturn, setDesiredReturn] = useState('');
+  const [optimizationMessage, setOptimizationMessage] = useState('');
 
   // Initialize or update assets when portfolioAssets changes
   useEffect(() => {
@@ -62,6 +63,8 @@ const Optimizer = () => {
     try {
       await optimizePortfolio({ startDate, desiredReturn });
       await fetchAssets();  // Fetch the updated weights after optimization
+      setOptimizationMessage('Optimization completed successfully!');
+      setTimeout(() => setOptimizationMessage(''), 3000);  // Clear message after 3 seconds
     } catch (error) {
       console.error("Optimization failed: ", error);
     }
@@ -71,17 +74,13 @@ const Optimizer = () => {
 
   return (
     <div className="optimizer-section">
-      <h2>Optimization Environment</h2>
+      <h2>Current Portfolio Weights</h2>
       <div className="weight-display">
-        <div className="weight-display-header">
-          <h3>Weight Distribution</h3>
-        </div>
         <div className="weight-display-content">
           <div className="pie-chart-container">
             <WeightPieChart data={assets} />
           </div>
           <div className="table-container">
-            <h3>Portfolio Details</h3>
             <PortfolioTable assets={assets} />
           </div>
         </div>
@@ -95,22 +94,32 @@ const Optimizer = () => {
         </div>
       </div>
       <div className="optimization-tools">
-        <h3>Optimization Tools</h3>
+        <h3>Markowitz Optimizer</h3>
+        <p>Optimize your portfolio weights automatically with this tool.</p>
         <div className="optimization-inputs">
-          <input 
-            type="date" 
-            value={startDate} 
-            onChange={e => setStartDate(e.target.value)} 
-            max={todayDate} // Restrict to past dates
-          />
-          <input 
-            type="number" 
-            placeholder="Desired return (%)" 
-            value={desiredReturn} 
-            onChange={e => setDesiredReturn(e.target.value)} 
-          />
+          <label>
+            Enter desired start date (default: 1 year ago):
+            <input 
+              type="date" 
+              value={startDate} 
+              onChange={e => setStartDate(e.target.value)} 
+              max={todayDate} // Restrict to past dates
+              className="date-input"
+            />
+          </label>
+          <label>
+            Enter desired level of return (default: auto-calculated):
+            <input 
+              type="number" 
+              placeholder="Desired return (%)" 
+              value={desiredReturn} 
+              onChange={e => setDesiredReturn(e.target.value)} 
+              className="return-input"
+            />
+          </label>
         </div>
-        <button onClick={handleOptimizeClick}>Optimize Portfolio</button>
+        <button onClick={handleOptimizeClick}>Run Optimizer</button>
+        {optimizationMessage && <p className="optimization-message">{optimizationMessage}</p>}
       </div>
     </div>
   );

@@ -74,6 +74,9 @@ const TickerForm = () => {
 
   return (
     <div className="ticker-form">
+      <label htmlFor="ticker-input" className="ticker-form-label">
+        Search for assets by ticker symbol to add them to your portfolio. You may add up to 5.
+      </label>
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}

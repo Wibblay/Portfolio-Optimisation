@@ -20,7 +20,7 @@
 .weight-display-header {
     margin-bottom: 20px;
     width: 100%;
-    text-align: center;
+    text-align: left;
 }
 
 .weight-display-content {
@@ -55,7 +55,8 @@
 
 .controls {
     display: flex;
-    justify-content: space-around; /* Distributes space evenly around buttons */
+    justify-content: flex-start; /* Align buttons to the left */
+    gap: 10px; /* Space between buttons */
     margin-top: 20px; /* Gives some space above the buttons */
 }
 
@@ -66,6 +67,7 @@ button {
     background-color: var(--accent-color);
     border: none;
     cursor: pointer;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 
     /* Visually separates buttons when they are side by side */
@@ -73,44 +75,42 @@ button {
 }
 
 button:hover {
-    background-color: darken(var(--accent-color), 10%);
-}
-
-button:last-child {
-    margin-right: 0; /* Removes margin from the last button */
+    background-color: var(--hover-background-color);
 }
 
 .optimization-tools {
-    flex-grow: 2;
+    padding: 20px; /* Match the padding with sliders-container */
+    background-color: var(--secondary-background-color);
+    border-top: 1px solid var(--border-color);
+    border-radius: 5px; /* Add border radius for consistency */
     margin-top: 20px;
-    text-align: center;
 }
 
 .optimization-inputs {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.optimization-inputs label {
+    font-size: 14px;
+    color: var(--foreground-color);
+    display: flex;
     align-items: center;
-    margin-bottom: 10px;
 }
 
 .optimization-inputs input {
-    margin: 0 10px;
+    margin-left: 10px; /* Add horizontal space between label and input */
     padding: 10px;
-    border: 1px solid #ccc;
+    font-size: 14px;
+    color: var(--foreground-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    font-size: 1rem;
 }
 
-.optimization-tools button {
-    padding: 10px 20px;
-    background-color: var(--button-background-color);
-    color: var(--button-text-color);
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.optimization-tools button:hover {
-    background-color: var(--button-hover-background-color);
-    color: var(--button-hover-text-color);
+.optimization-message {
+    margin-top: 20px; /* Add vertical space above the optimization message */
+    color: var(--accent-color);
 }

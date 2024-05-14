@@ -177,7 +177,6 @@ def fetch_portfolio_returns(start_date):
         logging.error("ValueError in portfolio returns: %s", e)
         return jsonify({'error': str(e)}), 400
 
-    logging.debug("Portfolio cumulative returns: %s", portfolio_cumulative_returns.reset_index().to_dict(orient='records'))
     return jsonify(portfolio_cumulative_returns.reset_index().to_dict(orient='records'))
 
 @app.route('/api/monte_carlo_simulation', methods=['GET'])

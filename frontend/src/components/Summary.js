@@ -71,6 +71,7 @@ const PortfolioSummary = () => {
             </div>
             {portfolioAssets.length > 0 && (
                 <div className="summary-bottom">
+                    <h3>Cumulative Returns (%)</h3>
                     <div className="controls">
                         <div className="button-group">
                             <button 
@@ -92,32 +93,47 @@ const PortfolioSummary = () => {
                                 1Y
                             </button>
                         </div>
-                        <input
-                            type="date"
-                            value={startDate}
-                            onChange={e => setStartDate(e.target.value)}
-                            className="date-input"
-                            max={todayDate}
-                        />
+                        <div className="date-input-container">
+                            <label htmlFor="custom-date">Set custom start date:</label>
+                            <input
+                                id="custom-date"
+                                type="date"
+                                value={startDate}
+                                onChange={e => setStartDate(e.target.value)}
+                                className="date-input"
+                                max={todayDate}
+                            />
+                        </div>
                     </div>
-                    <h3>Cumulative Returns</h3>
-                    <PortfolioReturnsChart startDate={startDate} />
+                    <div className="returns-chart-container">
+                        <PortfolioReturnsChart startDate={startDate} />
+                    </div>
                 </div>
             )}
         </div>
     );
 };
 
-const StatisticsDisplay = ({ statistics }) => (
-    <div className="statistics">
-        {Object.entries(statistics).map(([key, value]) => (
-            <div className="statistic" key={key}>
-                <h4>{key}:</h4>
-                <p>{typeof value === 'number' ? value.toFixed(2) : value}</p>
-            </div>
-        ))}
-    </div>
-);
+const StatisticsDisplay = ({ statistics }) => {
+    const formattedStatistics = [
+        { key: 'Total Value', label: 'Total Value (USD)', value: `$${statistics['Total Value'].toFixed(2)}` },
+        { key: 'Total Return', label: '3 Year Total Return (%)', value: `${statistics['Total Return'].toFixed(2)}%` },
+        { key: 'Annual Volatility', label: 'Annual Volatility (%)', value: `${statistics['Annual Volatility'].toFixed(2)}%` },
+        { key: 'Sharpe Ratio', label: 'Sharpe Ratio', value: statistics['Sharpe Ratio'].toFixed(2) },
+        { key: 'CAGR', label: 'CAGR (3 Years)', value: `${statistics['CAGR'].toFixed(2)}%` },
+    ];
+
+    return (
+        <div className="summary-statistics">
+            {formattedStatistics.map(({ key, label, value }) => (
+                <div className="statistic" key={key}>
+                    <h4>{label}:</h4>
+                    <p>{value}</p>
+                </div>
+            ))}
+        </div>
+    );
+};
 
 const PortfolioReturnsChart = ({ startDate }) => {
     const { portfolioAssets } = useContext(PortfolioContext); // Use context to access portfolio assets

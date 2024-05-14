@@ -29,7 +29,14 @@
     font-size: 14px;
     display: flex;
     flex-direction: column; /* Stack children vertically */
-    gap: 1px;
+    gap: 0; /* Removes the gap between the elements */
+    margin: 0; /* Removes any default margin */
+    padding: 0; /* Removes any default padding */
+}
+
+.asset-details p {
+    margin: 0; /* Removes default top and bottom margins */
+    padding: 2px 0; /* Optional: Adds a small padding for better readability */
 }
 
 .chart-and-remove {
