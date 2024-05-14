@@ -1,4 +1,5 @@
 /* Layout.css */
+
 /* Define theme variables for colors and common styles */
 :root {
     --background-color: #1e1e1e; /* Dark grey, base background color */
@@ -9,130 +10,130 @@
     --box-shadow-color: rgba(0, 0, 0, 0.1); /* Shadow for elevated elements */
 }
 
-/* Global styles */
+/* Global styles for the entire application */
 html, body, #root {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    height: 100%; /* Ensure the main container fills the viewport height */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
 }
 
 body {
-    background-color: var(--secondary-background-color);
-    color: var(--foreground-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: hidden;
+    background-color: var(--secondary-background-color); /* Set background color for the entire body */
+    color: var(--foreground-color); /* Set text color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Define font family */
+    overflow: hidden; /* Prevent body scrolling */
 }
 
 /* Scrollbar styles */
 * {
-    scrollbar-width: thin;  
-    scrollbar-color: var(--border-color) var(--background-color);  
+    scrollbar-width: thin; /* Set thin scrollbar for Firefox */
+    scrollbar-color: var(--border-color) var(--background-color); /* Set scrollbar colors */
 }
 
 *::-webkit-scrollbar {
-    width: 12px;  
+    width: 12px; /* Set scrollbar width for Webkit browsers */
 }
 
 *::-webkit-scrollbar-track {
-    background: var(--background-color);  
-    border-radius: 10px;
+    background: var(--background-color); /* Set scrollbar track color */
+    border-radius: 10px; /* Add rounded corners to the track */
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);  
-    border-radius: 10px;
-    border: 3px solid var(--background-color);  
+    background-color: var(--border-color); /* Set scrollbar thumb color */
+    border-radius: 10px; /* Add rounded corners to the thumb */
+    border: 3px solid var(--background-color); /* Add border around the thumb */
 }
 
 *::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-color);  
+    background: var(--accent-color); /* Change thumb color on hover */
 }
 
 /* Layout and container styles */
 .main-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    padding-bottom: 60px;
+    display: flex; /* Use flexbox layout */
+    flex-direction: row; /* Arrange children in a row */
+    width: 100%; /* Fill the full width */
+    height: 100%; /* Fill the full height */
+    overflow: auto; /* Enable scrolling if content overflows */
+    padding-bottom: 60px; /* Add bottom padding */
 }
 
 .header {
-    width: 100%;
-    padding: 15px 20px;
-    background-color: var(--secondary-background-color);
-    color: var(--foreground-color);
-    font-size: 24px;
-    text-align: left;
-    box-shadow: 0 4px 6px var(--box-shadow-color);
-    border-bottom: 1px solid var(--border-color);
-    position: relative;
-    z-index: 1000;
+    width: 100%; /* Fill the full width */
+    padding: 15px 20px; /* Add padding */
+    background-color: var(--secondary-background-color); /* Set background color */
+    color: var(--foreground-color); /* Set text color */
+    font-size: 24px; /* Set font size */
+    text-align: left; /* Align text to the left */
+    box-shadow: 0 4px 6px var(--box-shadow-color); /* Add shadow */
+    border-bottom: 1px solid var(--border-color); /* Add bottom border */
+    position: relative; /* Enable positioning */
+    z-index: 1000; /* Ensure it stays on top */
 }
 
 .header h1 {
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    font-weight: normal; /* Set font weight to normal */
 }
 
-/* Portfolio builder styles */
+/* Styles for the portfolio builder section */
 .portfolio-builder-main {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 45%;
-    min-width: 420px;
-    padding-left: 0px;
-    padding-bottom: 90px;
-    background-color: var(--secondary-background-color);
-    color: var(--foreground-color);
-    overflow: auto;
+    display: flex; /* Use flexbox layout */
+    flex-direction: column; /* Arrange children in a column */
+    align-items: flex-start; /* Align items to the start of the flex container */
+    width: 45%; /* Set width to 45% */
+    min-width: 420px; /* Set minimum width */
+    padding-left: 0px; /* Remove left padding */
+    padding-bottom: 90px; /* Add bottom padding */
+    background-color: var(--secondary-background-color); /* Set background color */
+    color: var(--foreground-color); /* Set text color */
+    overflow: auto; /* Enable scrolling if content overflows */
 }
 
 .ticker-form, .portfolio-builder {
-    width: 100%;
-    padding: 20px;
-    background-color: var(--background-color);
-    border-radius: 0;
-    box-shadow: 0 2px 4px var(--box-shadow-color);
-    border: 1px solid var(--border-color);
+    width: 100%; /* Fill the full width */
+    padding: 20px; /* Add padding */
+    background-color: var(--background-color); /* Set background color */
+    border-radius: 0; /* No rounded corners */
+    box-shadow: 0 2px 4px var(--box-shadow-color); /* Add shadow */
+    border: 1px solid var(--border-color); /* Add border */
 }
 
-/* Customization tools styles */
+/* Styles for the customization tools section */
 .customization-tools {
-    background-color: var(--secondary-background-color);
-    width: 55%;
-    min-width: 515px;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-    border-left: 1px solid var(--border-color);
-    padding-bottom: 90px;
+    background-color: var(--secondary-background-color); /* Set background color */
+    width: 55%; /* Set width to 55% */
+    min-width: 515px; /* Set minimum width */
+    display: flex; /* Use flexbox layout */
+    flex-direction: column; /* Arrange children in a column */
+    overflow: auto; /* Enable scrolling if content overflows */
+    border-left: 1px solid var(--border-color); /* Add left border */
+    padding-bottom: 90px; /* Add bottom padding */
 }
 
 .tab-toolbar {
-    background-color: var(--secondary-background-color);
-    padding: 0;
-    display: flex;
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--secondary-background-color); /* Set background color */
+    padding: 0; /* Remove padding */
+    display: flex; /* Use flexbox layout */
+    border-bottom: 1px solid var(--border-color); /* Add bottom border */
 }
 
 .tab-toolbar button {
-    flex-grow: 1;
-    padding: 10px 20px;
-    border: none;
-    background-color: transparent;
-    color: var(--foreground-color);
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.2s ease;
-    border-bottom: 3px solid transparent;
+    flex-grow: 1; /* Allow buttons to grow equally */
+    padding: 10px 20px; /* Add padding */
+    border: none; /* Remove border */
+    background-color: transparent; /* Make background transparent */
+    color: var(--foreground-color); /* Set text color */
+    cursor: pointer; /* Change cursor to pointer */
+    outline: none; /* Remove outline */
+    transition: background-color 0.2s ease; /* Add transition for background color */
+    border-bottom: 3px solid transparent; /* Add transparent bottom border */
 }
 
 .tab-toolbar button:hover, .tab-toolbar button.active {
-    background-color: var(--background-color);
-    border-bottom-color: var(--accent-color);
-    color: var(--accent-color);
+    background-color: var(--background-color); /* Change background color on hover/active */
+    border-bottom-color: var(--accent-color); /* Change bottom border color */
+    color: var(--accent-color); /* Change text color */
 }

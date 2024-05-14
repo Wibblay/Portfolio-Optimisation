@@ -1,10 +1,15 @@
+/* Summary.js */
 import React, { useContext, useState, useEffect } from 'react';
 import { PortfolioContext } from '../hooks/PortfolioContext.js';
 import './Summary.css';
 import PriceChart from './PriceChart.js';
 import axios from 'axios';
 
-// Fetch statistics data from API
+/**
+ * Fetches statistics data from the backend API.
+ * 
+ * @param {function} setStatistics - Function to update the statistics state.
+ */
 const fetchStatisticsData = async (setStatistics) => {
     try {
         const response = await axios.get('/api/portfolio-statistics');
@@ -20,6 +25,10 @@ const fetchStatisticsData = async (setStatistics) => {
     }
 };
 
+/**
+ * Component to display the portfolio summary.
+ * Shows portfolio statistics and a cumulative returns chart.
+ */
 const PortfolioSummary = () => {
     const { portfolioAssets } = useContext(PortfolioContext);
     const [statistics, setStatistics] = useState(null);
@@ -30,6 +39,7 @@ const PortfolioSummary = () => {
     });
     const [activeButton, setActiveButton] = useState('1Y');
 
+    // Fetch statistics data when portfolio assets change
     useEffect(() => {
         if (portfolioAssets.length > 0) {
             fetchStatisticsData(setStatistics);
@@ -38,6 +48,11 @@ const PortfolioSummary = () => {
         }
     }, [portfolioAssets]);
 
+    /**
+     * Handles the button click to set the start date for the returns chart.
+     * 
+     * @param {string} period - The period for the start date (1M, 6M, 1Y).
+     */
     const handleButtonClick = (period) => {
         const today = new Date();
         let newStartDate;
@@ -114,6 +129,12 @@ const PortfolioSummary = () => {
     );
 };
 
+/**
+ * Component to display formatted portfolio statistics.
+ * 
+ * @param {object} statistics - The statistics data to display.
+ * @returns {JSX.Element} The rendered StatisticsDisplay component.
+ */
 const StatisticsDisplay = ({ statistics }) => {
     const formattedStatistics = [
         { key: 'Total Value', label: 'Total Value (USD)', value: `$${statistics['Total Value'].toFixed(2)}` },
@@ -135,10 +156,17 @@ const StatisticsDisplay = ({ statistics }) => {
     );
 };
 
+/**
+ * Component to display the portfolio returns chart.
+ * 
+ * @param {string} startDate - The start date for the returns data.
+ * @returns {JSX.Element} The rendered PortfolioReturnsChart component.
+ */
 const PortfolioReturnsChart = ({ startDate }) => {
     const { portfolioAssets } = useContext(PortfolioContext); // Use context to access portfolio assets
     const [data, setData] = useState([]);
 
+    // Fetch returns data when the start date or portfolio assets change
     useEffect(() => {
         const fetchData = async () => {
             if (portfolioAssets.length > 0) {

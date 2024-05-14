@@ -1,21 +1,31 @@
+/* WeightPieChart.js */
 import React, { useState, useEffect, useRef } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useResizeObserver } from '../hooks/ResizeObserver';
 import './WeightPieChart.css';
 
+/**
+ * Component to render a responsive pie chart displaying portfolio asset weights.
+ * 
+ * @param {Array} data - Array of asset data with `symbol` and `weight` properties.
+ * @returns {JSX.Element} The rendered WeightPieChart component.
+ */
 const WeightPieChart = ({ data = [] }) => {
     const containerRef = useRef(null);
     const dimensions = useResizeObserver(containerRef);
     const [size, setSize] = useState(300); // Default size, adjust as needed
 
+    // Update chart size based on container dimensions
     useEffect(() => {
         if (dimensions && dimensions.width) {
             setSize(dimensions.width); // Set both width and height to the same value to maintain a square aspect
         }
     }, [dimensions]);
 
+    // Define colors for the pie chart segments
     const COLORS = ['#003f5c', '#2f4b7c', '#665191', '#a05195', '#d45087'];
 
+    // Display a message if there is no data to show
     if (data.length === 0) {
         return <div>No data to display.</div>;
     }

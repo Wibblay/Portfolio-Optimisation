@@ -283,6 +283,8 @@ class Portfolio:
                     simulated_return = np.random.normal(mean_returns, std_dev)
                     simulated_prices = simulated_prices * (1 + simulated_return)
                     simulation_results[day, sim] = simulated_prices * weights[0]
+                    
+        # Handle the case for multiple assets
         else:
             cov_matrix = daily_returns.cov()
             usd_close_prices = self.close_price_to_usd(close_prices)
@@ -298,4 +300,3 @@ class Portfolio:
 
         logging.info(f"Monte Carlo simulation completed with {n_simulations} simulations.")
         return simulation_results.tolist()
-

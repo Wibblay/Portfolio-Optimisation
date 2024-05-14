@@ -1,4 +1,3 @@
-/*App.js*/
 import React, { useState } from 'react';
 import { PortfolioProvider } from './hooks/PortfolioContext';
 import TickerForm from './components/TickerForm';
@@ -45,13 +44,13 @@ function App() {
                             onClick={() => handleTabClick('optimizer')}
                             className={activeTab === 'optimizer' ? 'active' : ''}
                         >
-                            Optimizer
+                            Balance Weights
                         </button>
                         <button 
                             onClick={() => handleTabClick('predictor')}
                             className={activeTab === 'predictor' ? 'active' : ''}
                         >
-                            Predictor
+                            Predict Performance
                         </button>
                     </div>
                     {activeTab === 'portfolio-summary' && <PortfolioSummary />}

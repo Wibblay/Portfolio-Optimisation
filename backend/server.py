@@ -1,3 +1,4 @@
+#server.py
 from flask import Flask, send_from_directory, jsonify, request
 import requests
 import json
@@ -19,31 +20,37 @@ load_dotenv(dotenv_path=dotenv_path)
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
+# Initialize a new portfolio instance
 new_portfolio = Portfolio()
 
 # INIT ROUTES
 @app.route('/')
 def index():
+    """Serve the main HTML file for the application."""
     return send_from_directory(os.path.join('..', 'frontend', 'build'), 'index.html')
 
 @app.route('/static/js/<path:filename>')
 def static_files_js(filename):
+    """Serve JavaScript files from the static directory."""
     logging.debug("Request received for js static files route")
     return send_from_directory(os.path.join('..', 'frontend', 'build', 'static', 'js'), filename)
 
 @app.route('/static/css/<path:filename>')
 def static_files_css(filename):
+    """Serve CSS files from the static directory."""
     logging.debug("Request received for css static files route")
     return send_from_directory(os.path.join('..', 'frontend', 'build', 'static', 'css'), filename)
 
 @app.route('/<path:filename>')
 def other_files(filename):
+    """Serve other files from the static directory."""
     logging.debug("Request received for other files route")
     return send_from_directory(os.path.join('..', 'frontend', 'build'), filename)
 
 # API ROUTES
 @app.route('/symbol-search')
 def symbol_search():
+    """Search for stock symbols using the Finnhub API."""
     logging.debug("Request received for Finnhub API")
     query = request.args.get('query')
 
@@ -64,6 +71,7 @@ def symbol_search():
 # PORTFOLIO ROUTES
 @app.route('/api/portfolio-tickers', methods=['GET'])
 def get_portfolio_tickers():
+    """Get the current portfolio tickers."""
     logging.debug("Portfolio ticker request received")
     assets = [{'symbol': asset['symbol'], 'name': asset['name'], 'weight': asset['weight'], 'sector': asset['sector'],
                'industry': asset['industry'], 'currency': asset['currency']} for asset in new_portfolio.assets]
@@ -72,6 +80,7 @@ def get_portfolio_tickers():
 
 @app.route('/api/add-tickers', methods=['POST'])
 def add_tickers():
+    """Add a new ticker to the portfolio."""
     asset = request.json
     logging.debug("Ticker to add: %s", asset['symbol'])
     new_portfolio.add_asset(asset)
@@ -79,6 +88,7 @@ def add_tickers():
 
 @app.route('/api/remove-ticker/<symbol>', methods=['DELETE'])
 def remove_ticker(symbol):
+    """Remove a ticker from the portfolio."""
     logging.debug("Request to remove ticker: %s", symbol)
     try:
         if new_portfolio.remove_asset(symbol):
@@ -93,6 +103,7 @@ def remove_ticker(symbol):
 
 @app.route('/api/historical-data/<ticker>')
 def historical_data(ticker):
+    """Fetch historical data for a specific ticker."""
     logging.debug("Request for historical data: %s", ticker)
     today = datetime.datetime.now()
     one_month_ago = today - datetime.timedelta(days=30)
@@ -111,6 +122,7 @@ def historical_data(ticker):
 
 @app.route('/api/update-weights', methods=['POST'])
 def update_weights():
+    """Update the weights of assets in the portfolio."""
     updated_assets = request.json
     logging.debug("Received weights update request: %s", updated_assets)
     
@@ -127,6 +139,7 @@ def update_weights():
 
 @app.route('/api/optimize-portfolio', methods=['POST'])
 def optimize_portfolio():
+    """Optimize the portfolio using mean-variance optimization."""
     logging.debug("Request received for portfolio optimization")
     data = request.json
     start_date = data.get('start_date')
@@ -144,6 +157,7 @@ def optimize_portfolio():
 
 @app.route('/api/portfolio-statistics', methods=['GET'])
 def get_portfolio_statistics():
+    """Calculate and return portfolio statistics."""
     try:
         stats = new_portfolio.calculate_statistics()
         logging.debug("Portfolio statistics: %s", stats)
@@ -157,6 +171,7 @@ def get_portfolio_statistics():
 
 @app.route('/api/portfolio-returns/<start_date>')
 def fetch_portfolio_returns(start_date):
+    """Fetch and calculate cumulative portfolio returns from a start date."""
     logging.debug("Start date passed: %s", start_date)
     end_date = datetime.datetime.now().strftime('%Y-%m-%d')
     
@@ -181,6 +196,7 @@ def fetch_portfolio_returns(start_date):
 
 @app.route('/api/monte_carlo_simulation', methods=['GET'])
 def monte_carlo_simulation():
+    """Perform a Monte Carlo simulation on the portfolio."""
     n_simulations = request.args.get('numSimulations', default=1000, type=int)
     logging.debug("Number of Monte Carlo simulations requested: %d", n_simulations)
     

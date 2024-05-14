@@ -1,8 +1,16 @@
+/* WeightSliders.js */
 import React, { useState, useEffect, useMemo } from 'react';
 import './WeightSliders.css';
 
+/**
+ * Component to render sliders for adjusting portfolio asset weights.
+ * 
+ * @param {Array} assets - Array of asset objects with `symbol` and `weight` properties.
+ * @param {function} onWeightChange - Function to handle weight changes.
+ * @returns {JSX.Element} The rendered WeightSliders component.
+ */
 const WeightSliders = ({ assets = [], onWeightChange }) => {  // Default to an empty array if assets is undefined
-    // Use useMemo to calculate initial weights directly from assets
+    // Calculate initial weights directly from assets using useMemo
     const initialWeights = useMemo(() => {
         if (!Array.isArray(assets)) return {}; // Ensure assets is an array
 
@@ -20,7 +28,12 @@ const WeightSliders = ({ assets = [], onWeightChange }) => {  // Default to an e
         setWeights(initialWeights);
     }, [initialWeights]);
 
-    // Handle slider changes
+    /**
+     * Handles slider value changes.
+     * 
+     * @param {string} symbol - The symbol of the asset.
+     * @param {number} newPercentage - The new weight percentage of the asset.
+     */
     const handleSliderChange = (symbol, newPercentage) => {
         const newWeight = newPercentage / 100;  // Convert percentage back to decimal for consistent data handling
 
@@ -50,6 +63,7 @@ const WeightSliders = ({ assets = [], onWeightChange }) => {  // Default to an e
         setWeights(updatedWeights);
     };
 
+    // Display a message if there are no assets to show
     if (assets.length === 0) {
         return <div>No assets to display.</div>;
     }
@@ -67,7 +81,7 @@ const WeightSliders = ({ assets = [], onWeightChange }) => {  // Default to an e
                         max="100"
                         value={weights[asset.symbol] || 0} // Ensure value is defined
                         onChange={e => handleSliderChange(asset.symbol, parseFloat(e.target.value))}
-                        disabled={assets.length === 1}
+                        disabled={assets.length === 1} // Disable the slider if there's only one asset
                     />
                 </div>
             ))}

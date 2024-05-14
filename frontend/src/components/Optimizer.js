@@ -1,3 +1,4 @@
+/* Optimizer.js */
 import React, { useContext, useState, useEffect, useReducer } from 'react';
 import { PortfolioContext } from '../hooks/PortfolioContext';
 import WeightPieChart from './WeightPieChart';
@@ -5,7 +6,13 @@ import PortfolioTable from './PortfolioTable';
 import WeightSliders from './WeightSliders';
 import './Optimizer.css';
 
-// Reducer function to handle state updates in a controlled manner
+/**
+ * Reducer function to handle state updates for assets in a controlled manner.
+ * 
+ * @param {Array} state - The current state of assets.
+ * @param {Object} action - The action to perform on the state.
+ * @returns {Array} The updated state.
+ */
 function assetReducer(state, action) {
   switch (action.type) {
     case 'INIT':
@@ -26,6 +33,10 @@ function assetReducer(state, action) {
   }
 }
 
+/**
+ * Component to manage and optimize the portfolio weights.
+ * Provides functionalities to adjust weights manually or via optimization.
+ */
 const Optimizer = () => {
   const { portfolioAssets, fetchAssets, updateAssetWeights, optimizePortfolio } = useContext(PortfolioContext);
   const [assets, dispatch] = useReducer(assetReducer, []);
@@ -38,12 +49,19 @@ const Optimizer = () => {
     dispatch({ type: 'INIT', payload: portfolioAssets });
   }, [portfolioAssets]);
 
-  // Handle weight changes and propagate them to all children
+  /**
+   * Handles weight changes and updates the state accordingly.
+   * 
+   * @param {string} symbol - The symbol of the asset.
+   * @param {number} newWeight - The new weight of the asset.
+   */
   const handleWeightChange = (symbol, newWeight) => {
     dispatch({ type: 'UPDATE_WEIGHT', payload: { symbol, newWeight } });
   };
 
-  // Commit changes to backend
+  /**
+   * Commits the changes to the backend.
+   */
   const handleCommitChanges = async () => {
     const payload = assets.map(asset => ({
       symbol: asset.symbol,
@@ -52,13 +70,18 @@ const Optimizer = () => {
     await updateAssetWeights(payload);  // Your method to update weights in the backend
   };
 
-  // Reset to previous values by re-fetching assets
+  /**
+   * Resets the weights to previous values by re-fetching assets from the backend.
+   */
   const handleReset = async () => {
     console.log("Resetting assets to previous values");
     await fetchAssets();  // Re-fetch assets from the backend to reset state
   };
 
-  // Optimize portfolio
+  /**
+   * Optimizes the portfolio using the Markowitz optimizer.
+   * Fetches the updated weights after optimization and displays a success message.
+   */
   const handleOptimizeClick = async () => {
     try {
       await optimizePortfolio({ startDate, desiredReturn });

@@ -1,3 +1,4 @@
+/* PortfolioContext.js */
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import {
     fetchAssetsApi,
@@ -7,13 +8,27 @@ import {
     optimizePortfolioApi
 } from './Api';
 
+// Create a context for the portfolio
 export const PortfolioContext = createContext();
 
+/**
+ * Provider component for the PortfolioContext.
+ * It manages the state and functions related to the portfolio and provides them to its children.
+ * 
+ * @param {Object} children - The child components that will consume the context.
+ * @returns {JSX.Element} The provider component.
+ */
 export const PortfolioProvider = ({ children }) => {
+    // State to hold portfolio assets
     const [portfolioAssets, setPortfolioAssets] = useState([]);
+    // State to indicate loading status
     const [loading, setLoading] = useState(false);
+    // State to hold error messages
     const [error, setError] = useState(null);
 
+    /**
+     * Fetches assets from the backend API and updates the state.
+     */
     const fetchAssets = async () => {
         setLoading(true);
         try {
@@ -27,10 +42,16 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    // Fetch assets when the component mounts
     useEffect(() => {
         fetchAssets();
     }, []);
 
+    /**
+     * Adds a new asset to the portfolio.
+     * 
+     * @param {Object} asset - The asset to add.
+     */
     const addAsset = async (asset) => {
         if (!portfolioAssets.some(a => a.symbol === asset.symbol)) {
             setLoading(true);
@@ -52,6 +73,11 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    /**
+     * Removes an asset from the portfolio.
+     * 
+     * @param {string} symbol - The symbol of the asset to remove.
+     */
     const removeAsset = async (symbol) => {
         setLoading(true);
         try {
@@ -69,6 +95,11 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    /**
+     * Updates the weights of the assets in the portfolio.
+     * 
+     * @param {Array} updatedWeights - The new weights for the assets.
+     */
     const updateAssetWeights = async (updatedWeights) => {
         setLoading(true);
         try {
@@ -86,6 +117,11 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    /**
+     * Optimizes the portfolio based on the provided parameters.
+     * 
+     * @param {Object} params - The parameters for the optimization.
+     */
     const optimizePortfolio = async (params) => {
         setLoading(true);
         try {
@@ -104,6 +140,7 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
 
+    // Provide the portfolio context to child components
     return (
         <PortfolioContext.Provider value={{
             portfolioAssets,
@@ -120,4 +157,5 @@ export const PortfolioProvider = ({ children }) => {
     );
 };
 
+// Custom hook to use the PortfolioContext
 export const usePortfolio = () => useContext(PortfolioContext);

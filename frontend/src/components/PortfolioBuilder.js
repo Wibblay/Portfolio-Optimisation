@@ -1,11 +1,22 @@
+/* PortfolioBuilder.js */
 import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { PortfolioContext } from '../hooks/PortfolioContext.js';
 import PriceChart from './PriceChart.js';
 import './PortfolioBuilder.css';
 
+/**
+ * Component to display the current portfolio.
+ * It maps through the portfolio assets and displays their details along with a price chart and a remove button.
+ */
 const PortfolioBuilder = () => {
     const { portfolioAssets, removeAsset } = useContext(PortfolioContext);
 
+    /**
+     * Handler to remove an asset from the portfolio.
+     * It calls the removeAsset function from the context.
+     * 
+     * @param {string} symbol - The symbol of the asset to remove.
+     */
     const handleRemove = useCallback((symbol) => {
         removeAsset(symbol);
     }, [removeAsset]);
@@ -39,24 +50,32 @@ const PortfolioBuilder = () => {
             ))}
         </div>
     );
-    
 };
 
 export default PortfolioBuilder;
 
+/**
+ * Component to fetch and display the price chart for a given asset.
+ * It fetches historical price data for the asset and displays it using the PriceChart component.
+ * 
+ * @param {string} symbol - The symbol of the asset to fetch price data for.
+ */
 const AssetPriceChart = ({ symbol }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         let isMounted = true;
 
+        /**
+         * Fetches historical price data for the asset.
+         */
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/historical-data/${symbol}`);
                 const jsonData = await response.json();
                 const formattedData = jsonData.map(item => ({
-                    date: item.Date, // Assuming the API returns 'date'
-                    price: item.Close // Assuming the API returns 'close' price
+                    date: item.Date, 
+                    price: item.Close 
                 }));
                 if (isMounted) setData(formattedData);
             } catch (error) {
@@ -65,8 +84,9 @@ const AssetPriceChart = ({ symbol }) => {
         };
         fetchData();
 
+        // Cleanup function to set isMounted to false when the component unmounts
         return () => {
-            isMounted = false; // Set it to false when the component unmounts
+            isMounted = false;
         };
     }, [symbol]);
 

@@ -1,15 +1,24 @@
+/* Predictor.js */
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import * as d3 from 'd3';
 import './Predictor.css';
 
+/**
+ * Component to run a Monte Carlo simulation predicting the performance of the portfolio over one year.
+ * 
+ * @returns {JSX.Element} The rendered Predictor component.
+ */
 const Predictor = () => {
     const [chartData, setChartData] = useState(null);
     const [statistics, setStatistics] = useState(null);
     const [loading, setLoading] = useState(false);
     const [numSimulations, setNumSimulations] = useState(100); // Default to 100 simulations
 
+    /**
+     * Fetches Monte Carlo simulation data from the backend.
+     */
     const fetchSimulationData = async () => {
         setLoading(true);
         try {
@@ -23,6 +32,11 @@ const Predictor = () => {
         setLoading(false);
     };
 
+    /**
+     * Calculates statistics from the simulation data.
+     * 
+     * @param {Array} data - The simulation data.
+     */
     const calculateStatistics = (data) => {
         const finalValues = data[data.length - 1];
         const meanFinalValue = (finalValues.reduce((sum, value) => sum + value, 0) / finalValues.length).toFixed(2);
@@ -39,6 +53,12 @@ const Predictor = () => {
         });
     };
 
+    /**
+     * Prepares the chart data for displaying the simulation results.
+     * 
+     * @param {Array} data - The simulation data.
+     * @returns {Object} The chart data.
+     */
     const prepareChartData = (data) => {
         const labels = Array.from({ length: data.length }, (_, i) => `Day ${i + 1}`);
         const datasets = data[0].map((_, i) => ({
@@ -59,8 +79,15 @@ const Predictor = () => {
     // KDE function using Gaussian kernel
     const kernelDensityEstimator = (kernel, x) => (V) => x.map((x) => [x, d3.mean(V, (v) => kernel(x - v))]);
 
+    // Epanechnikov kernel function
     const epanechnikovKernel = (bandwidth) => (u) => Math.abs(u /= bandwidth) <= 1 ? 0.75 * (1 - u * u) / bandwidth : 0;
 
+    /**
+     * Prepares the KDE data for displaying the density of final portfolio values.
+     * 
+     * @param {Array} finalValues - The final values of the simulations.
+     * @returns {Object} The KDE chart data.
+     */
     const prepareKdeData = (finalValues) => {
         const bandwidth = 0.5; // Adjust bandwidth to make the curve smoother
         const kde = kernelDensityEstimator(epanechnikovKernel(bandwidth), d3.range(Math.min(...finalValues), Math.max(...finalValues), 0.1));
