@@ -20,84 +20,100 @@ function assetReducer(state, action) {
           : asset
       );
     case 'SET_OPTIMIZED_WEIGHTS':
-      return action.payload; 
+      return action.payload;
     default:
       return state;
   }
 }
 
 const Optimizer = () => {
-    const { portfolioAssets, fetchAssets, updateAssetWeights, optimizePortfolio } = useContext(PortfolioContext);
-    const [assets, dispatch] = useReducer(assetReducer, []);
-    const [startDate, setStartDate] = useState('');
-    const [desiredReturn, setDesiredReturn] = useState('');
+  const { portfolioAssets, fetchAssets, updateAssetWeights, optimizePortfolio } = useContext(PortfolioContext);
+  const [assets, dispatch] = useReducer(assetReducer, []);
+  const [startDate, setStartDate] = useState('');
+  const [desiredReturn, setDesiredReturn] = useState('');
 
-    // Initialize or update assets when portfolioAssets changes
-    useEffect(() => {
-        dispatch({ type: 'INIT', payload: portfolioAssets });
-    }, [portfolioAssets]);
+  // Initialize or update assets when portfolioAssets changes
+  useEffect(() => {
+    dispatch({ type: 'INIT', payload: portfolioAssets });
+  }, [portfolioAssets]);
 
-    // Handle weight changes and propagate them to all children
-    const handleWeightChange = (symbol, newWeight) => {
-        dispatch({ type: 'UPDATE_WEIGHT', payload: { symbol, newWeight } });
-    };
+  // Handle weight changes and propagate them to all children
+  const handleWeightChange = (symbol, newWeight) => {
+    dispatch({ type: 'UPDATE_WEIGHT', payload: { symbol, newWeight } });
+  };
 
-    const handleCommitChanges = async () => {
-        // Here you would typically send a POST request to your API
-        const payload = assets.map(asset => ({
-            symbol: asset.symbol,
-            weight: asset.weight
-        }));
-        await updateAssetWeights(payload);  // Your method to update weights in the backend
-    };
+  // Commit changes to backend
+  const handleCommitChanges = async () => {
+    const payload = assets.map(asset => ({
+      symbol: asset.symbol,
+      weight: asset.weight
+    }));
+    await updateAssetWeights(payload);  // Your method to update weights in the backend
+  };
 
-    const handleReset = async () => {
-        console.log("Resetting assets to previous values")
-        await fetchAssets();  // Re-fetch assets from the backend to reset state
-    };
+  // Reset to previous values by re-fetching assets
+  const handleReset = async () => {
+    console.log("Resetting assets to previous values");
+    await fetchAssets();  // Re-fetch assets from the backend to reset state
+  };
 
-    const handleOptimizeClick = async () => {
-        try {
-            await optimizePortfolio({ startDate, desiredReturn });
-            await fetchAssets();  // Fetch the updated weights after optimization
-        } catch (error) {
-            console.error("Optimization failed: ", error);
-        }
-    };
+  // Optimize portfolio
+  const handleOptimizeClick = async () => {
+    try {
+      await optimizePortfolio({ startDate, desiredReturn });
+      await fetchAssets();  // Fetch the updated weights after optimization
+    } catch (error) {
+      console.error("Optimization failed: ", error);
+    }
+  };
 
-    return (
-        <div className="optimizer-section">
-            <h2>Optimization Environment</h2>
-            <div className="weight-display">
-                <div className="weight-display-header">
-                    <h3>Weight Distribution</h3>
-                </div>
-                <div className="weight-display-content">
-                    <div className="pie-chart-container">
-                        <WeightPieChart data={assets} />
-                    </div>
-                    <div className="table-container">
-                        <h3>Portfolio Details</h3>
-                        <PortfolioTable assets={assets} />
-                    </div>
-                </div>
-                <div className="sliders-container">
-                        <h3>Adjust Portfolio Weights</h3>
-                        <WeightSliders assets={assets} onWeightChange={handleWeightChange} />
-                        <div className="controls">
-                            <button onClick={handleCommitChanges}>Commit Changes</button>
-                            <button onClick={handleReset}>Reset</button>
-                        </div>
-                    </div>
-            </div>
-            <div className="optimization-tools">
-                <h3>Optimization Tools</h3>
-                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-                <input type="number" placeholder="Desired return (%)" value={desiredReturn} onChange={e => setDesiredReturn(e.target.value)} />
-                <button onClick={handleOptimizeClick}>Optimize Portfolio</button>
-            </div>
+  const todayDate = new Date().toISOString().split('T')[0];
+
+  return (
+    <div className="optimizer-section">
+      <h2>Optimization Environment</h2>
+      <div className="weight-display">
+        <div className="weight-display-header">
+          <h3>Weight Distribution</h3>
         </div>
-    );
+        <div className="weight-display-content">
+          <div className="pie-chart-container">
+            <WeightPieChart data={assets} />
+          </div>
+          <div className="table-container">
+            <h3>Portfolio Details</h3>
+            <PortfolioTable assets={assets} />
+          </div>
+        </div>
+        <div className="sliders-container">
+          <h3>Adjust Portfolio Weights</h3>
+          <WeightSliders assets={assets} onWeightChange={handleWeightChange} />
+          <div className="controls">
+            <button onClick={handleCommitChanges}>Commit Changes</button>
+            <button onClick={handleReset}>Reset</button>
+          </div>
+        </div>
+      </div>
+      <div className="optimization-tools">
+        <h3>Optimization Tools</h3>
+        <div className="optimization-inputs">
+          <input 
+            type="date" 
+            value={startDate} 
+            onChange={e => setStartDate(e.target.value)} 
+            max={todayDate} // Restrict to past dates
+          />
+          <input 
+            type="number" 
+            placeholder="Desired return (%)" 
+            value={desiredReturn} 
+            onChange={e => setDesiredReturn(e.target.value)} 
+          />
+        </div>
+        <button onClick={handleOptimizeClick}>Optimize Portfolio</button>
+      </div>
+    </div>
+  );
 }
 
 export default Optimizer;

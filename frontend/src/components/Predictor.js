@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import './Predictor.css';
 
 const Predictor = () => {
     const [chartData, setChartData] = useState(null);
     const [statistics, setStatistics] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [numSimulations, setNumSimulations] = useState(1000); // Default to 1000 simulations
 
     const fetchSimulationData = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/monte_carlo_simulation');
+            const response = await fetch(`/api/monte_carlo_simulation?numSimulations=${numSimulations}`);
             const data = await response.json();
             setChartData(data);
             calculateStatistics(data);
@@ -51,9 +53,20 @@ const Predictor = () => {
     return (
         <div className="predictor-section">
             <h2>Prediction Environment</h2>
-            <button onClick={fetchSimulationData} disabled={loading}>
-                {loading ? "Running Simulation..." : "Run Monte Carlo Simulation"}
-            </button>
+            <div className="controls">
+                <label htmlFor="numSimulations">Number of Simulations:</label>
+                <input 
+                    type="number" 
+                    id="numSimulations" 
+                    value={numSimulations} 
+                    onChange={e => setNumSimulations(e.target.value)} 
+                    min="1" 
+                    step="1"
+                />
+                <button onClick={fetchSimulationData} disabled={loading}>
+                    {loading ? "Running Simulation..." : "Run Monte Carlo Simulation"}
+                </button>
+            </div>
             {chartData ? (
                 <>
                     <Line 
@@ -78,8 +91,8 @@ const Predictor = () => {
                     {statistics && (
                         <div className="statistics">
                             <h3>Simulation Statistics</h3>
-                            <p>Mean Final Value: {statistics.meanFinalValue}</p>
-                            <p>Standard Deviation of Final Values: {statistics.stdDevFinalValue}</p>
+                            <p><strong>Mean Final Value:</strong> {statistics.meanFinalValue}</p>
+                            <p><strong>Standard Deviation of Final Values:</strong> {statistics.stdDevFinalValue}</p>
                         </div>
                     )}
                 </>

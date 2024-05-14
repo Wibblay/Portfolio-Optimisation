@@ -7,7 +7,7 @@
     padding: 20px;
     overflow: auto;
     box-sizing: border-box;
-    padding-bottom: 70px;
+    padding-bottom: 90px;
 }
 
 .weight-display {
@@ -82,4 +82,35 @@ button:last-child {
 
 .optimization-tools {
     flex-grow: 2;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.optimization-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.optimization-inputs input {
+    margin: 0 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.optimization-tools button {
+    padding: 10px 20px;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.optimization-tools button:hover {
+    background-color: var(--button-hover-background-color);
+    color: var(--button-hover-text-color);
 }

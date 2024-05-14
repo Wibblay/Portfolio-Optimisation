@@ -1,0 +1,23 @@
+/* WeightPieChart.css */
+.pie-chart-container {
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary-background-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.pie-chart-container text {
+    font-size: 16px; /* Larger font size for labels */
+    font-weight: bold; /* Bold labels */
+    fill: var(--foreground-color); /* Use the foreground color for labels */
+}
+
+.pie-chart-container .recharts-tooltip-wrapper {
+    font-size: 14px;
+}

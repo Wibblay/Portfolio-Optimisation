@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './WeightSliders.css';
 
-const WeightSliders = ({ assets, onWeightChange }) => {
+const WeightSliders = ({ assets = [], onWeightChange }) => {  // Default to an empty array if assets is undefined
     // Use useMemo to calculate initial weights directly from assets
-    const initialWeights = useMemo(() => assets.reduce((acc, asset) => ({
-        ...acc,
-        [asset.symbol]: asset.weight * 100  // Convert decimal weights to percentage for slider representation
-    }), {}), [assets]);
+    const initialWeights = useMemo(() => {
+        if (!Array.isArray(assets)) return {}; // Ensure assets is an array
+
+        return assets.reduce((acc, asset) => ({
+            ...acc,
+            [asset.symbol]: asset.weight * 100  // Convert decimal weights to percentage for slider representation
+        }), {});
+    }, [assets]);
 
     // State to hold the slider weights
     const [weights, setWeights] = useState(initialWeights);
@@ -54,9 +58,10 @@ const WeightSliders = ({ assets, onWeightChange }) => {
         <div>
             {assets.map(asset => (
                 <div key={asset.symbol} className="slider-container">
-                    <div className="slider-label" style={{ width: '100px' }}>{asset.symbol}</div>
+                    <label htmlFor={`slider-${asset.symbol}`} className="slider-label" style={{ width: '100px' }}>{asset.symbol}</label>
                     <input
                         type="range"
+                        id={`slider-${asset.symbol}`}
                         className="slider"
                         min="0"
                         max="100"

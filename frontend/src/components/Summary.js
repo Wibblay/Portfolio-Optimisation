@@ -28,6 +28,7 @@ const PortfolioSummary = () => {
         oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
         return oneYearAgo.toISOString().split('T')[0]; // Formats to YYYY-MM-DD
     });
+    const [activeButton, setActiveButton] = useState('1Y');
 
     useEffect(() => {
         if (portfolioAssets.length > 0) {
@@ -36,6 +37,27 @@ const PortfolioSummary = () => {
             setStatistics(null); // Reset statistics if there are no assets
         }
     }, [portfolioAssets]);
+
+    const handleButtonClick = (period) => {
+        const today = new Date();
+        let newStartDate;
+        switch (period) {
+            case '1M':
+                newStartDate = new Date(today.setMonth(today.getMonth() - 1));
+                break;
+            case '6M':
+                newStartDate = new Date(today.setMonth(today.getMonth() - 6));
+                break;
+            case '1Y':
+            default:
+                newStartDate = new Date(today.setFullYear(today.getFullYear() - 1));
+                break;
+        }
+        setStartDate(newStartDate.toISOString().split('T')[0]);
+        setActiveButton(period);
+    };
+
+    const todayDate = new Date().toISOString().split('T')[0];
 
     return (
         <div className="portfolio-summary">
@@ -49,11 +71,36 @@ const PortfolioSummary = () => {
             </div>
             {portfolioAssets.length > 0 && (
                 <div className="summary-bottom">
-                    <input
-                        type="date"
-                        value={startDate}
-                        onChange={e => setStartDate(e.target.value)}
-                    />
+                    <div className="controls">
+                        <div className="button-group">
+                            <button 
+                                className={activeButton === '1M' ? 'active' : ''}
+                                onClick={() => handleButtonClick('1M')}
+                            >
+                                1M
+                            </button>
+                            <button 
+                                className={activeButton === '6M' ? 'active' : ''}
+                                onClick={() => handleButtonClick('6M')}
+                            >
+                                6M
+                            </button>
+                            <button 
+                                className={activeButton === '1Y' ? 'active' : ''}
+                                onClick={() => handleButtonClick('1Y')}
+                            >
+                                1Y
+                            </button>
+                        </div>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={e => setStartDate(e.target.value)}
+                            className="date-input"
+                            max={todayDate}
+                        />
+                    </div>
+                    <h3>Cumulative Returns</h3>
                     <PortfolioReturnsChart startDate={startDate} />
                 </div>
             )}
