@@ -4,6 +4,8 @@
 
 The Portfolio Optimization Tool is a web application designed to help users manage and optimize their investment portfolios. The application provides features such as adding/removing assets, adjusting portfolio weights, optimizing the portfolio using mean-variance optimization, predicting performance using Monte Carlo simulations, and viewing detailed portfolio statistics.
 
+A live version of the app can be found at Wibblay.pythonanywhere.com. Please be aware that the hosted version is subject to many performance issues which are not present when the tool is run locally. Buttons may need to be pressed multiple times to get a response and the hosted version is likely to crash for reasons I have not been able to fix
+
 ## Features
 
 - **Add/Remove Assets**: Search for assets by ticker symbol and add them to your portfolio. You can remove assets as well.
@@ -49,7 +51,7 @@ The Portfolio Optimization Tool is a web application designed to help users mana
      ```sh
      source venv/Scripts/activate
      ```
-   - Install the dependencies:
+   - Install the dependencies if required (these should already be within the venv):
      ```sh
      pip install -r requirements.txt
      ```
@@ -57,7 +59,7 @@ The Portfolio Optimization Tool is a web application designed to help users mana
      ```sh
      cd backend
      ```
-   - Start the Flask server:
+   - Start the Flask server (in server.py):
      ```sh
      flask run
      ```
